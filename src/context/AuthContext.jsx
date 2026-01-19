@@ -16,7 +16,10 @@ export function AuthProvider({ children }) {
   }
 
   function logout() {
-    localStorage.clear();
+    // localStorage.clear();
+    
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
     setUser(null);
   }
 

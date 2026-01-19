@@ -14,8 +14,9 @@ export default function Login() {
   async function handleSubmit(e) {
     e.preventDefault();
     const data = await loginAPI({ email, password });
+    console.log(data);
     login(data.user, data.token);
-    navigate("/dashboard");
+    navigate("/groups");
   }
 
 

@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Dashboard from "./pages/Dashboard";
+import Groups from "./pages/Groups";
 import Upload from "./pages/Upload";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import { useAuth } from "./context/AuthContext";
@@ -22,10 +22,10 @@ export default function App() {
 
         {/* Protected routes */}
         <Route
-          path="/dashboard"
+          path="/groups"
           element={
             <ProtectedRoute>
-              <Dashboard />
+              <Groups />
             </ProtectedRoute>
           }
         />

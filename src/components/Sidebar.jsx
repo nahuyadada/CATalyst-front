@@ -6,10 +6,19 @@ export default function Sidebar() {
       <ul className="nav flex-column">
         <li className="nav-item">
           <NavLink to="/dashboard" className="nav-link">
-            Dashboard
+            Groups
           </NavLink>
         </li>
-
+        <li className="nav-item">
+          <NavLink to="/upload" className="nav-link">
+            Upload
+          </NavLink>
+        </li>
+        <li className="nav-item">
+          <NavLink to="/upload" className="nav-link">
+            Upload
+          </NavLink>
+        </li>
         <li className="nav-item">
           <NavLink to="/upload" className="nav-link">
             Upload

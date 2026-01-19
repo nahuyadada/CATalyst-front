@@ -21,11 +21,11 @@ export default function Login() {
                   <input type="password" className="form-control" />
                 </div>
                 <div>
-                    <a href="/register">Don't have an account? Register</a>
+                    <a href="/login">Already have an account? Login</a>
                 </div>
 
                 <button className="btn btn-primary w-100">
-                  Login
+                  Register
                 </button>
               </form>
             </div>
