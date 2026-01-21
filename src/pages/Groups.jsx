@@ -2,6 +2,7 @@ import GroupsLayout from "../layouts/GroupsLayout";
 import ActionCard from "../components/ui/ActionCard";
 import GroupCard from "../components/ui/GroupCard";
 import CreateGroupModal from "../components/modals/CreateGroupModal";
+import JoinGroupModal from "../components/modals/JoinGroupModal";
 import { Modal } from "bootstrap";
 
 export default function Groups() {
@@ -33,9 +34,9 @@ export default function Groups() {
               icon="group_add"
               color="#d4af37"
               onClick={() => {
-                const modalEl = document.getElementById("createGroupModal");
-                const modal = new Modal(modalEl);
-                modal.show();
+                const modalJoin = document.getElementById("joinGroupModal");
+                const modal2 = new Modal(modalJoin);
+                modal2.show();
               }}
             />
           </div>
@@ -58,6 +59,7 @@ export default function Groups() {
 
         {/* Modals (mounted once) */}
         <CreateGroupModal onSubmit={(data) => console.log(data)} />
+        <JoinGroupModal onSubmit={(data) => console.log(data)} />
 
       </div>
     </GroupsLayout>
