@@ -2,17 +2,17 @@ export default function ActionCard({
   title,
   subtitle,
   icon,
-  variant = "primary",
+  color,
   onClick,
 }) {
   return (
     <button
       onClick={onClick}
-      className={`w-100 h-100 border-0 rounded-4 p-5 text-white bg-${variant}
-        shadow-lg text-center d-flex flex-column align-items-center justify-content-center
-        transition`}
+      className="w-100 h-100 border-0 rounded-4 p-5 text-white shadow-lg
+        text-center d-flex flex-column align-items-center justify-content-center"
       style={{
         minHeight: "220px",
+        backgroundColor: color,
         transition: "transform 0.2s ease",
       }}
       onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.02)")}

@@ -10,8 +10,8 @@
 // )
 
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./assets/main.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import "./assets/main.css";
 
 import React from "react";
 import ReactDOM from "react-dom/client";

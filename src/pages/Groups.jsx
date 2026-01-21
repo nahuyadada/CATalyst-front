@@ -1,7 +1,8 @@
-
 import GroupsLayout from "../layouts/GroupsLayout";
 import ActionCard from "../components/ui/ActionCard";
 import GroupCard from "../components/ui/GroupCard";
+import CreateGroupModal from "../components/modals/CreateGroupModal";
+import { Modal } from "bootstrap";
 
 export default function Groups() {
   return (
@@ -15,15 +16,27 @@ export default function Groups() {
               title="Create Group"
               subtitle="Start a new research workspace"
               icon="add_circle"
-              variant="primary"
+              color="#7a1e1e"
+              onClick={() => {
+                const modalEl = document.getElementById("createGroupModal");
+                const modal = new Modal(modalEl);
+                modal.show();
+              }}
             />
+
           </div>
+
           <div className="col-md-6">
             <ActionCard
               title="Join Group"
-              subtitle="Enter using an invite code"
+              subtitle="Enter using a group code"
               icon="group_add"
-              variant="secondary"
+              color="#d4af37"
+              onClick={() => {
+                const modalEl = document.getElementById("createGroupModal");
+                const modal = new Modal(modalEl);
+                modal.show();
+              }}
             />
           </div>
         </div>
@@ -42,6 +55,10 @@ export default function Groups() {
             <GroupCard name="Thesis Group" members={5} />
           </div>
         </div>
+
+        {/* Modals (mounted once) */}
+        <CreateGroupModal onSubmit={(data) => console.log(data)} />
+
       </div>
     </GroupsLayout>
   );
