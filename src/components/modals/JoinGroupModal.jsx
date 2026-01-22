@@ -6,8 +6,8 @@ export default function JoinGroupModal({ onSubmit }) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    // onSubmit({ joinCode });
-    console.log({ joinCode});
+    onSubmit({ joinCode });
+    // console.log({ joinCode});
   }
 
   return (
@@ -38,7 +38,7 @@ export default function JoinGroupModal({ onSubmit }) {
             <form onSubmit={handleSubmit}>
               {/* Name */}
               <div className="mb-3">
-                <label className="form-label fw-bold">Group Name</label>
+                <label className="form-label fw-bold">Group Code</label>
                 <input
                   type="text"
                   className="form-control"
@@ -47,41 +47,6 @@ export default function JoinGroupModal({ onSubmit }) {
                   required
                 />
               </div>
-
-              {/* Description */}
-              {/* <div className="mb-4">
-                <label className="form-label fw-bold">Description</label>
-                <textarea
-                  className="form-control"
-                  rows="3"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                />
-              </div> */}
-
-              {/* Color Picker */}
-              {/* <div className="mb-4">
-                <label className="form-label fw-bold">Group Color</label>
-                <div className="d-flex gap-3 flex-wrap">
-                  {COLORS.map((c) => (
-                    <button
-                      key={c}
-                      type="button"
-                      onClick={() => setColor(c)}
-                      className="border-0 rounded-circle"
-                      style={{
-                        width: 36,
-                        height: 36,
-                        backgroundColor: c,
-                        outline:
-                          color === c
-                            ? "3px solid #000"
-                            : "2px solid rgba(0,0,0,0.2)",
-                      }}
-                    />
-                  ))}
-                </div>
-              </div> */}
 
               {/* Actions */}
               <div className="d-flex justify-content-end gap-2">
@@ -97,7 +62,7 @@ export default function JoinGroupModal({ onSubmit }) {
                   className="btn text-white"
                   style={{ backgroundColor: "#7a1e1e" }}
                 >
-                  Join Group
+                  Send Join Request
                 </button>
               </div>
             </form>

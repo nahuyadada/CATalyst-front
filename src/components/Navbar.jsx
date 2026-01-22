@@ -25,6 +25,7 @@ export default function Navbar() {
               type="button"
               data-bs-toggle="dropdown"
               aria-expanded="false"
+              onClick={() => console.log("User menu clicked")}
             >
               {user.username || user.email}
             </button>
