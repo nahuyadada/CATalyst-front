@@ -1,4 +1,4 @@
-export default function GroupCard({ name, members, status = "Active" }) {
+export default function GroupCard({ name, members, status = "Active",color }) {
   return (
     <div className="card border-0 rounded-4 shadow-sm overflow-hidden h-100">
       
@@ -7,8 +7,8 @@ export default function GroupCard({ name, members, status = "Active" }) {
         className="position-relative"
         style={{
           height: 120,
-          background:
-            "linear-gradient(135deg, #4f46e5, #6366f1)",
+          background: `linear-gradient(135deg, ${color}, ${color}cc)`,
+
         }}
       >
         <span

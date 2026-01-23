@@ -10,13 +10,19 @@ import { useState } from "react";
 import { createGroup as createGroupAPI, joinGroupAPI } from "../api/group.api";
 import { useAuth } from "../context/AuthContext";
 
+// TODO: call APIs to get real groups data
+
+
 export default function Groups() {
   const id = useAuth().user.id;
-  const [groups, setGroups] = useState([
-    { id: 1, name: "Dev Team", members: 34, color: "#7a1e1e" },
-    { id: 2, name: "Research Cohort A", members: 12, color: "#d4af37" },
-    { id: 3, name: "Thesis Group", members: 5, color: "#1e40af" },
-  ]);
+  // const [groups, setGroups] = useState([
+  //   { id: 1, name: "Dev Team", members: 34, color: "#7a1e1e" },
+  //   { id: 2, name: "Research Cohort A", members: 12, color: "#d4af37" },
+  //   { id: 3, name: "Thesis Group", members: 5, color: "#1e40af" },
+  // ]);
+  const [groups, setGroups] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   const { config, showFeedback } = useFeedbackModal();
   const openModal = (modalId) => {
     const modalEl = document.getElementById(modalId);
@@ -86,6 +92,21 @@ export default function Groups() {
       });
     }
   }
+  // TODO: Fetch groups from API
+  useEffect(() => {
+    async function fetchGroups() {
+      try {
+        const data = await getIdRequestAPI(id);
+        setGroups(data);
+      } catch (err) {
+        console.error("Failed to fetch groups:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchGroups();
+  }, [id]);
 
   return (
     <GroupsLayout>
@@ -117,6 +138,27 @@ export default function Groups() {
         </div>
 
         {/* Groups List */}
+        
+{/* ========================== */}
+        {/* <div className="row g-4">
+          {loading ? (
+            <p>Loading groups...</p>
+          ) : groups.length === 0 ? (
+            <p className="text-muted">You are not part of any groups yet.</p>
+          ) : (
+            groups.map((group) => (
+              <div className="col-md-4" key={group.id}>
+                <GroupCard
+                  name={group.name}
+                  members={group.members}
+                  color={group.color}
+                />
+              </div>
+            ))
+          )}
+        </div> */}
+
+{/* ========================== */}
         <h5 className="fw-bold mb-3">GROUPS</h5>
 
         <div className="row g-4">
