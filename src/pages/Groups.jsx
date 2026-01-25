@@ -6,20 +6,14 @@ import JoinGroupModal from "../components/modals/JoinGroupModal";
 import FeedbackModal from "../components/modals/FeedbackModal";
 import { useFeedbackModal } from "../hooks/useFeedbackModel";
 import { Modal } from "bootstrap";
-import { useState } from "react";
-import { createGroup as createGroupAPI, joinGroupAPI } from "../api/group.api";
+import { useState, useEffect } from "react";
+import { createGroup as createGroupAPI, joinGroupAPI,getGroupsByUserIdAPI } from "../api/group.api";
 import { useAuth } from "../context/AuthContext";
-
-// TODO: call APIs to get real groups data
 
 
 export default function Groups() {
   const id = useAuth().user.id;
-  // const [groups, setGroups] = useState([
-  //   { id: 1, name: "Dev Team", members: 34, color: "#7a1e1e" },
-  //   { id: 2, name: "Research Cohort A", members: 12, color: "#d4af37" },
-  //   { id: 3, name: "Thesis Group", members: 5, color: "#1e40af" },
-  // ]);
+
   const [groups, setGroups] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -37,8 +31,15 @@ export default function Groups() {
     try {
       console.log("Creating group with data:", groupData);
       const newGroup = await createGroupAPI(groupData);
-      console.log("wompppp");
-      setGroups((prev) => [newGroup, ...prev]);
+      console.log("wompppp", newGroup);
+      const normalized = {
+        id: newGroup.data.id,
+        name: newGroup.data.name,
+        members: newGroup.data.members ?? 1,
+        color: newGroup.data.color,
+      };
+      
+      setGroups((prev) => [normalized, ...prev]);
 
       const modalEl = document.getElementById("createGroupModal");
       const modal = Modal.getInstance(modalEl) || new Modal(modalEl);
@@ -92,22 +93,23 @@ export default function Groups() {
       });
     }
   }
-  // TODO: Fetch groups from API
-  useEffect(() => {
-    async function fetchGroups() {
-      try {
-        const data = await getIdRequestAPI(id);
-        setGroups(data);
-      } catch (err) {
-        console.error("Failed to fetch groups:", err);
-      } finally {
-        setLoading(false);
-      }
-    }
+    useEffect(() => {
+        async function fetchGroups() {
+          try {
+            const groups = await getGroupsByUserIdAPI(id);
+            console.log(groups.groups.data)
+            setGroups(groups.groups.data);
+          } catch (err) {
+            console.error("Failed to fetch groups:", err);
+          } finally {
+            setLoading(false);
+          }
+        }
 
-    fetchGroups();
-  }, [id]);
+        fetchGroups();
+      }, [id]);
 
+  
   return (
     <GroupsLayout>
       <div className="py-4">
@@ -140,7 +142,8 @@ export default function Groups() {
         {/* Groups List */}
         
 {/* ========================== */}
-        {/* <div className="row g-4">
+      <h5 className="fw-bold mb-3">GROUPS</h5>
+        <div className="row g-4">
           {loading ? (
             <p>Loading groups...</p>
           ) : groups.length === 0 ? (
@@ -156,22 +159,9 @@ export default function Groups() {
               </div>
             ))
           )}
-        </div> */}
-
-{/* ========================== */}
-        <h5 className="fw-bold mb-3">GROUPS</h5>
-
-        <div className="row g-4">
-          <div className="col-md-4">
-            <GroupCard name="Dev Team" members={34} />
-          </div>
-          <div className="col-md-4">
-            <GroupCard name="Research Cohort A" members={12} />
-          </div>
-          <div className="col-md-4">
-            <GroupCard name="Thesis Group" members={5} />
-          </div>
         </div>
+
+
 
         {/* Modals (mounted once) */}
         <CreateGroupModal onSubmit={handleCreateGroup} />

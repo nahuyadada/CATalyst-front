@@ -13,3 +13,8 @@ export async function joinGroupAPI(data) {
     body: JSON.stringify(data),
   });
 }
+export async function getGroupsByUserIdAPI(userId) {
+  return apiRequest(`/groups/${userId}`, {
+    method: "GET",
+  });
+}
