@@ -109,7 +109,7 @@ export default function Groups() {
         fetchGroups();
       }, [id]);
 
-  
+
   return (
     <GroupsLayout>
       <div className="py-4">
