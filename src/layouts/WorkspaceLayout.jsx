@@ -6,14 +6,14 @@ export default function WorkflowLayout({ children }) {
     <>
         <Navbar />
         <div className="container py-4">
-        {/* Breadcrumb */}
+        {/* Breadcrumb - change this soon for the table details */}
         <div className="mb-2 text-muted small">
-            Groups / Internal Group AI / <span className="text-primary">Process Workflow</span>
+            GroupsName / Internal Group AI / <span className="text-primary">Process Workflow</span>
         </div>
 
         <h2 className="fw-bold mb-4">Workflow Sequence</h2>
 
-        <WorkflowTracker />
+        {/* <WorkflowTracker /> */}
 
         <div className="mt-4">
             {children}
