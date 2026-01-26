@@ -5,6 +5,7 @@ import Register from "./pages/Register";
 import Groups from "./pages/Groups";
 import Upload from "./pages/Upload";
 import ProtectedRoute from "./routes/ProtectedRoute";
+import GroupWorkflow from "./pages/Workspace";
 import { useAuth } from "./context/AuthContext";
 
 export default function App() {
@@ -38,6 +39,11 @@ export default function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/workspace/:groupName" element={
+          <ProtectedRoute>
+            <GroupWorkflow />
+          </ProtectedRoute>
+        } />
       </Routes>
     </BrowserRouter>
   );

@@ -1,4 +1,11 @@
+import { useNavigate } from "react-router-dom";
+
 export default function GroupCard({ name, members, status = "Active",color }) {
+  const navigate = useNavigate();
+  function handleEnter() {
+    const safeName = name.replace(/\s+/g, "-"); // spaces → dash
+    navigate(`/workspace/${safeName}`);
+  }
   return (
     <div className="card border-0 rounded-4 shadow-sm overflow-hidden h-100">
       
@@ -31,7 +38,9 @@ export default function GroupCard({ name, members, status = "Active",color }) {
           {members} Members
         </div>
 
-        <button className="btn btn-outline-primary w-100 fw-bold">
+        <button 
+          onClick={handleEnter}
+          className="btn btn-outline-primary w-100 fw-bold">
           Enter Group
         </button>
       </div>
