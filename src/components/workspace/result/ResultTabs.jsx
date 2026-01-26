@@ -26,11 +26,11 @@ export default function ResultTabs({ activeTab, onTabChange }) {
           </button>
         </div>
 
-        {/* <div className="d-flex gap-2">
+        <div className="d-flex gap-2">
           <button className="btn btn-light">Copy</button>
           <button className="btn btn-light">Download</button>
           <button className="btn btn-light">Share</button>
-        </div> */}
+        </div>
       </div>
 
       {activeTab === "papers" && (

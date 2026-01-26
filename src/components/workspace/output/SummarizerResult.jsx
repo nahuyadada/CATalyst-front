@@ -1,7 +1,6 @@
 import { useState } from "react";
-import PapersHistory from "../result/PapersHistory";
 
-export default function ExtractorOutput() {
+export default function SummarizerResult() {
   const [activeTab, setActiveTab] = useState("result");
 
   return (
@@ -33,19 +32,26 @@ export default function ExtractorOutput() {
       <div className="card-body flex-1 overflow-auto">
         {activeTab === "result" && (
           <div className="space-y-4">
-            <div className="border rounded p-3">
-              <h6 className="fw-bold">Extracted Text</h6>
-              <p className="text-muted small">
-                The extracted content of the document will appear here after running the workflow...
-              </p>
-            </div>
+            <h3 className="fw-bold">Executive Summary</h3>
+            <p className="text-muted text-sm italic">Generated for: Strategic Plan Q3 2024.pdf</p>
+            <h4 className="fw-bold mt-3">Operational Overview</h4>
+            <p>The Q3 2024 Strategic Plan highlights a pivot toward <mark>hyper-automation</mark>...</p>
+            <h4 className="fw-bold mt-3">Key Strategic Pillars</h4>
+            <ul>
+              <li>Regional Hub Expansion: Finalizing mega-centers</li>
+              <li>Fleet Modernization: 30% vehicles to electric</li>
+              <li>AI-Driven Routing: Real-time traffic models</li>
+            </ul>
+            <h4 className="fw-bold mt-3">Financial Projections</h4>
+            <p>Initial capital expenditure peaks in July, ROI within 18 months...</p>
           </div>
         )}
 
         {activeTab === "papers" && (
-          <div className="space-y-2">
-            <p className="text-muted text-sm">Previously processed papers</p>
-            <PapersHistory />
+          <div>
+            <p className="text-muted text-sm">Previously generated summaries</p>
+            <button className="card p-3 mb-2 text-start border-primary w-full">Strategic Plan Q3 2024.pdf</button>
+            <button className="card p-3 mb-2 text-start border-primary w-full">Market Analysis 2024.pdf</button>
           </div>
         )}
       </div>

@@ -114,12 +114,13 @@
 ;
 
 import ExtractorInput from "./input/ExtractorInput.jsx";
+import SummarizerInput from "./input/SummarizerInput.jsx";
 // import SummarizerInput from "./input/SummarizerInput.jsx";
 // import GapInput from "./input/GapInput.jsx";
 
 const STEP_INPUT_COMPONENTS = {
   extractor: ExtractorInput,
-  // summarizer: SummarizerInput,
+  summarizer: SummarizerInput,
   // gap: GapInput,
 };
 
