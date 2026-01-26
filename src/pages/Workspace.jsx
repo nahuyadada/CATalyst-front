@@ -22,6 +22,7 @@ import InputPanel from "../components/workspace/InputPanel";
 import { useState } from "react";
 import StepTabs from "../components/workspace/StepTabs";
 import WorkflowTracker from "../components/workspace/WorkflowTracker";
+import ResultPanel from "../components/workspace/ResultPanel";
 export default function GroupWorkflow() {
   const [step, setStep] = useState("extractor");
 
@@ -37,7 +38,7 @@ export default function GroupWorkflow() {
           <InputPanel step={step} />
         </div>
         <div className="col-lg-6">
-          {/* <ResultPanel step={step} /> */}
+          <ResultPanel step={step} />
         </div>
       </div>
     </WorkflowLayout>
