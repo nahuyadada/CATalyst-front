@@ -1,57 +1,47 @@
-// import { useState } from "react";
-import ResultTabs from "./result/ResultTabs";
-import PapersHistory from "./result/PapersHistory";
-import SummarizerResult from "./output/SummarizerResult";
-import ExtractorOutput from "./output/ExtractorOutput";
+
+// import ResultTabs from "./result/ResultTabs";
+// import PapersHistory from "./result/PapersHistory";
+// import SummarizerResult from "./output/SummarizerResult";
+// import ExtractorOutput from "./output/ExtractorOutput";
+// import GapExtractorOutput from "./output/GapOutput";
 
 // export default function ResultPanel({ step }) {
-//   const [tab, setTab] = useState("result");
 
 //   function renderContent() {
-//     // When Papers tab
-//     if (tab === "papers") {
-//       return <PapersHistory />;
-//     }
-
-//     // When Result tab
-//     if (step === "extractor") {
-//       return <ExtractorOutput />;
-//     }
-
-//     // future steps
-//     if (step === "summarizer") {
-//       return <SummarizerResult />;
-//     }
-//     return (
-//       <div className="text-muted">No result view for this step yet.</div>
-//     );
+//     if (step === "extractor") return <ExtractorOutput />;
+//     if (step === "summarizer") return <SummarizerResult />;
+//     if (step === "gap_extractor") return <GapExtractorOutput />;
+//     return <div className="text-muted">No result view for this step yet.</div>;
 //   }
 
 //   return (
 //     <div className="card h-100">
 //       <div className="card-body d-flex flex-column">
-//         <ResultTabs activeTab={tab} onTabChange={setTab} />
+//         {/* Keep tabs for styling if needed, or remove if each step has its own */}
 //         {renderContent()}
 //       </div>
 //     </div>
 //   );
 // }
 
-export default function ResultPanel({ step }) {
-  // const [tab, setTab] = useState("result");
 
-  function renderContent() {
-    if (step === "extractor") return <ExtractorOutput />;
-    if (step === "summarizer") return <SummarizerResult />;
-    return <div className="text-muted">No result view for this step yet.</div>;
-  }
+// import ExtractorInput from "./input/ExtractorInput.jsx";
+// import SummarizerInput from "./input/SummarizerInput.jsx";
+// import GapInput from "./input/GapInput.jsx";
 
-  return (
-    <div className="card h-100">
-      <div className="card-body d-flex flex-column">
-        {/* Keep tabs for styling if needed, or remove if each step has its own */}
-        {renderContent()}
-      </div>
-    </div>
-  );
+// import ResultTabs from "./result/ResultTabs";
+// import PapersHistory from "./result/PapersHistory";
+import SummarizerResult from "./output/SummarizerResult";
+import ExtractorOutput from "./output/ExtractorOutput";
+import GapExtractorOutput from "./output/GapOutput";
+const STEP_INPUT_COMPONENTS = {
+  extractor: ExtractorOutput,
+  summarizer: SummarizerResult,
+  gap: GapExtractorOutput,
+};
+
+export default function InputPanel({ step }) {
+  const Component = STEP_INPUT_COMPONENTS[step];
+  return <Component />;
 }
+

@@ -22,9 +22,9 @@ export default function SummarizerResult() {
           </button>
         </div>
         <div className="d-flex gap-2">
-          <button className="btn btn-light">Copy</button>
+          {/* <button className="btn btn-light">Copy</button>
           <button className="btn btn-light">Download</button>
-          <button className="btn btn-light">Share</button>
+          <button className="btn btn-light">Share</button> */}
         </div>
       </div>
 

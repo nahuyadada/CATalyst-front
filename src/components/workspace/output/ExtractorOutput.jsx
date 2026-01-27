@@ -1,5 +1,5 @@
 import { useState } from "react";
-import PapersHistory from "../result/PapersHistory";
+// import PapersHistory from "../result/PapersHistory";
 
 export default function ExtractorOutput() {
   const [activeTab, setActiveTab] = useState("result");
@@ -23,9 +23,9 @@ export default function ExtractorOutput() {
           </button>
         </div>
         <div className="d-flex gap-2">
-          <button className="btn btn-light">Copy</button>
+          {/* <button className="btn btn-light">Copy</button>
           <button className="btn btn-light">Download</button>
-          <button className="btn btn-light">Share</button>
+          <button className="btn btn-light">Share</button> */}
         </div>
       </div>
 
@@ -45,7 +45,7 @@ export default function ExtractorOutput() {
         {activeTab === "papers" && (
           <div className="space-y-2">
             <p className="text-muted text-sm">Previously processed papers</p>
-            <PapersHistory />
+            {/* <PapersHistory /> */}
           </div>
         )}
       </div>
