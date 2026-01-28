@@ -155,6 +155,7 @@ export default function Groups() {
                   name={group.name}
                   members={group.members}
                   color={group.color}
+                  group_id = {group.id}
                 />
               </div>
             ))
