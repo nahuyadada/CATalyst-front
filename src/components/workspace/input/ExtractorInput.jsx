@@ -1,12 +1,17 @@
 import { FaCloudUploadAlt } from "react-icons/fa";
 import { FaPlay } from "react-icons/fa";
 import { MdInput } from "react-icons/md";
+import { extractorAPI } from "../../../api/workflow.api";
 
 import { useRef, useState} from "react";
 export default function InputPanel() {
 
   const [file, setFile] = useState(null);
   const fileInputRef = useRef(null);
+
+  // for run workflow
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState(null);
 
   function handleFile(selectedFiles) {
     const picked = selectedFiles[0];
@@ -31,6 +36,26 @@ export default function InputPanel() {
   }
 
 
+  async function handleRunWorkflow() {
+    if (!file) return alert("Please upload a file first.");
+    try {
+      setLoading(true);
+
+      const response = await extractorAPI(file);
+
+      if (response.success) {
+        setResult(response.data);
+        alert("Extraction successful!");
+      } else {
+        alert("Extraction failed: " + response.message);
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error running extractor.");
+    } finally {
+      setLoading(false);
+    }
+  }
   return (
     <div className="card h-100">
       <div className="card-header d-flex justify-content-between">
@@ -94,17 +119,20 @@ export default function InputPanel() {
           </div>
         )}
 
-
-        {/* Instructions */}
-        {/* <div className="flex-grow-1 d-flex flex-column">
-          <label className="fw-bold mb-2">Paste Text</label>
-          <textarea className="form-control flex-grow-1" />
-        </div> */}
-
-        <div className="text-end">
+        {/* <div className="text-end">
           <button className="btn btn-primary">
             <FaPlay className="me-1" />
             Run Workflow
+          </button>
+        </div> */}
+        <div className="text-end">
+          <button
+            className="btn btn-primary"
+            onClick={handleRunWorkflow}
+            disabled={loading}
+          >
+            <FaPlay className="me-1" />
+            {loading ? "Running..." : "Run Workflow"}
           </button>
         </div>
       </div>

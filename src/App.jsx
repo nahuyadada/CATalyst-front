@@ -44,6 +44,11 @@ export default function App() {
             <GroupWorkflow />
           </ProtectedRoute>
         } />
+        {/* <Route path="/workspace/workflow" element={
+          <ProtectedRoute>
+            <GroupWorkflow />
+          </ProtectedRoute>
+        } /> */}
       </Routes>
     </BrowserRouter>
   );
