@@ -1,39 +1,37 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { FaCloudUploadAlt, FaPlay } from "react-icons/fa";
-
+import { useGroup } from "../../../context/GroupContext.jsx";
+import { getExtractedFilesByGroupAPI } from "../../../api/auth.extractor.js";
 export default function SummarizerInput() {
   const [file, setFile] = useState(null);
   const fileInputRef = useRef(null);
+  
+  const group_id = useGroup().groupId;
 
+  const [extractedFiles, setExtractedFiles] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+
+  useEffect(() => {
+    async function fetchExtractedFiles() {
+      try {
+        setLoading(true);
+        const data = await getExtractedFilesByGroupAPI(group_id);
+        console.log("Extracted files data:", data);
+        setExtractedFiles(data.data || []);
+      } catch (error) {
+        console.error("Error fetching extracted files:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    if (group_id) {
+      fetchExtractedFiles();
+    }
+  }, [group_id]);
   const [selectedInstructions, setSelectedInstructions] = useState([]);
 
-  const instructionList = [
-    {
-      id: "1",
-      title: "Extract Research Objectives",
-      description: "Identify the main goals and research questions of the paper",
-    },
-    {
-      id: "2",
-      title: "Highlight Methodology",
-      description: "Summarize methods, data sources, and experimental design",
-    },
-    {
-      id: "3",
-      title: "Summarize Key Findings",
-      description: "Capture the most important results and discoveries",
-    },
-    {
-      id: "4",
-      title: "Identify Limitations",
-      description: "Point out weaknesses, constraints, or missing aspects",
-    },
-    {
-      id: "5",
-      title: "Summarize Conclusion",
-      description: "Provide a concise summary of the paper’s conclusion",
-    },
-  ];
 
   const toggleInstruction = (id) => {
     setSelectedInstructions((prev) =>
@@ -103,48 +101,47 @@ export default function SummarizerInput() {
             </div>
           </div>
         )}
+      <div className="flex-grow-1 overflow-auto mb-3">
+  <label className="fw-bold mb-2 d-block">Summarization Instructions</label>
 
-        {/* Instructions */}
-        {/* <div className="flex flex-col flex-1">
-          <label className="fw-bold mb-1">Additional Instructions</label>
-          <textarea
-            className="form-control flex-1 resize-none"
-            placeholder="Specify keywords, target length, or specific questions..."
-          />
-        </div> */}
+  {loading && (
+    <div className="text-muted small">Loading instructions...</div>
+  )}
 
+  {!loading && extractedFiles.length === 0 && (
+    <div className="text-muted small">
+      No instructions configured for this group.
+    </div>
+  )}
 
-          {/* Instruction Selection */}
-        <div className="flex-grow-1 overflow-auto mb-3">
-          <label className="fw-bold mb-2 d-block">Summarization Instructions</label>
+  {!loading &&
+    extractedFiles.map((item) => (
+      <div
+        key={item.id}
+        className="form-check border rounded p-3 mb-2"
+        style={{ cursor: "pointer" }}
+      >
+        <input
+          className="form-check-input"
+          type="checkbox"
+          id={`inst-${item.id}`}
+          checked={selectedInstructions.includes(item.id)}
+          onChange={() => toggleInstruction(item.id)}
+        />
 
-          {instructionList.map((item) => (
-            <div
-              key={item.id}
-              className="form-check border rounded p-3 mb-2"
-              style={{ cursor: "pointer" }}
-            >
-              <input
-                className="form-check-input"
-                type="checkbox"
-                id={`inst-${item.id}`}
-                checked={selectedInstructions.includes(item.id)}
-                onChange={() => toggleInstruction(item.id)}
-              />
-
-              <label
-                className="form-check-label w-100 ms-2"
-                htmlFor={`inst-${item.id}`}
-                style={{ cursor: "pointer" }}
-              >
-                <div className="fw-semibold small">{item.title}</div>
-                <div className="text-muted" style={{ fontSize: "12px" }}>
-                  {item.description}
-                </div>
-              </label>
-            </div>
-          ))}
-        </div>
+        <label
+          className="form-check-label w-100 ms-2"
+          htmlFor={`inst-${item.id}`}
+          style={{ cursor: "pointer" }}
+        >
+          <div className="fw-semibold small">{item.title}</div>
+          <div className="text-muted" style={{ fontSize: "12px" }}>
+            {item.description}
+          </div>
+        </label>
+      </div>
+    ))}
+</div>
 
         {/* Run Button */}
         <div className="text-end">
