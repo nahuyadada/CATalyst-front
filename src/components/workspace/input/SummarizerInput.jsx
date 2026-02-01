@@ -1,7 +1,8 @@
 import { useRef, useState, useEffect } from "react";
 import { FaCloudUploadAlt, FaPlay } from "react-icons/fa";
 import { useGroup } from "../../../context/GroupContext.jsx";
-import { getExtractedFilesByGroupAPI } from "../../../api/auth.extractor.js";
+import { getExtractedFilesByGroupAPI } from "../../../api/workflow.extractor.js";
+import { summarizerAPI } from "../../../api/workflow.api.js";
 export default function SummarizerInput() {
   const [file, setFile] = useState(null);
   const fileInputRef = useRef(null);
@@ -10,7 +11,28 @@ export default function SummarizerInput() {
 
   const [extractedFiles, setExtractedFiles] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [running, setRunning] = useState(false);
 
+  const handleRunWorkflow = async () => {
+    if (selectedInstructions.length === 0) {
+      alert("Please select at least one extracted file.");
+      return;
+    }
+
+    try {
+      setRunning(true);
+      console.log("Running summarizer with instructions:", selectedInstructions);
+      const res = await summarizerAPI(selectedInstructions[0]);
+      console.log("Summarizer response:", res);
+
+      alert("Summarizer workflow started successfully.");
+    } catch (err) {
+      console.error("Failed to run summarizer:", err);
+      alert(err.message || "Failed to run workflow");
+    } finally {
+      setRunning(false);
+    }
+  };
 
   useEffect(() => {
     async function fetchExtractedFiles() {
@@ -102,7 +124,7 @@ export default function SummarizerInput() {
           </div>
         )}
       <div className="flex-grow-1 overflow-auto mb-3">
-  <label className="fw-bold mb-2 d-block">Summarization Instructions</label>
+  <label className="fw-bold mb-2 d-block">Extracted Texts</label>
 
   {loading && (
     <div className="text-muted small">Loading instructions...</div>
@@ -145,9 +167,20 @@ export default function SummarizerInput() {
 
         {/* Run Button */}
         <div className="text-end">
-          <button className="btn btn-primary">
+          {/* <button className="btn btn-primary">
             <FaPlay className="me-1" /> Run Workflow
-          </button>
+          </button> */}
+            <button
+              className="btn btn-primary"
+              onClick={handleRunWorkflow}
+              disabled={running}
+              
+            >
+              <FaPlay className="me-1" />
+            {running ? "Running..." : "Run Workflow"}
+
+            </button> 
+
         </div>
       </div>
     </div>

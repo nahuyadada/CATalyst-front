@@ -9,3 +9,13 @@ export async function extractorAPI(file) {
     body: formData,
   });
 }
+export async function summarizerAPI(id){
+  return apiRequest(`/summarizer/${id}`, {
+    method: "POST",
+    body: JSON.stringify({ id }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  
+}
