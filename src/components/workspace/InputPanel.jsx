@@ -11,8 +11,8 @@ const STEP_INPUT_COMPONENTS = {
   search : SearcherInput
 };
 
-export default function InputPanel({ step }) {
+export default function InputPanel({ step, setResult }) {
   const Component = STEP_INPUT_COMPONENTS[step];
-  return <Component />;
+  return <Component setResult = {setResult} />;
 }
 

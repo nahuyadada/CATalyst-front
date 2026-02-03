@@ -4,14 +4,14 @@ import { MdInput } from "react-icons/md";
 import { extractorAPI } from "../../../api/workflow.api";
 
 import { useRef, useState} from "react";
-export default function InputPanel() {
+export default function InputPanel({setResult}) {
 
   const [file, setFile] = useState(null);
   const fileInputRef = useRef(null);
 
   // for run workflow
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState(null);
+  // const [result, setResult] = useState(null);
 
   function handleFile(selectedFiles) {
     const picked = selectedFiles[0];
