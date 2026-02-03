@@ -21,10 +21,7 @@ export default function SummarizerInput() {
 
     try {
       setRunning(true);
-      console.log("Running summarizer with instructions:", selectedInstructions);
       const res = await summarizerAPI(selectedInstructions[0]);
-      console.log("Summarizer response:", res);
-
       alert("Summarizer workflow started successfully.");
     } catch (err) {
       console.error("Failed to run summarizer:", err);

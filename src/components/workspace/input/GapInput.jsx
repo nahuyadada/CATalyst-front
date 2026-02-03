@@ -6,7 +6,6 @@ import { GapAPI } from "../../../api/workflow.api.js";
 
 export default function GapInput() {
   const group_id = useGroup().groupId;
-  console.log("group: ",group_id)
   
   const [file, setFile] = useState(null);
   const fileInputRef = useRef(null);
@@ -37,7 +36,6 @@ export default function GapInput() {
       try {
         setLoading(true);
         const res = await getSummaryByGroupAPI(group_id);
-        console.log("this is res: ",res)
         setSummaries(res.data || []);
       } catch (err) {
         console.error("Failed to fetch summaries:", err);
@@ -68,11 +66,10 @@ export default function GapInput() {
 
       const res = await GapAPI({
         group_id,
-        summary_ids: selectedSummaries,
+        summary_id: selectedSummaries[0],
       });
-      console.log("res: ",res)
 
-      alert("Gap workflow started.");
+      alert("Gap workflow finished.");
     } catch (err) {
       console.error(err);
       alert(err.message || "Failed to run workflow");

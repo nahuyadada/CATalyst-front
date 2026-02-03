@@ -7,7 +7,7 @@ export async function createGroup(data) {
   });
 }
 export async function joinGroupAPI(data) {
-    console.log("Joining group with data:", data);
+    // console.log("Joining group with data:", data);
   return apiRequest("/groups/join", {
     method: "POST",
     body: JSON.stringify(data),
