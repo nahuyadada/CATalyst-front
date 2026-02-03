@@ -5,7 +5,7 @@ import WorkflowTracker from "../components/workspace/WorkflowTracker";
 import ResultPanel from "../components/workspace/ResultPanel";
 import { useGroup } from "../context/GroupContext";
 export default function GroupWorkflow() {
-  const [step, setStep] = useState("gap");
+  const [step, setStep] = useState("topic"); // change to focus
   const group_id = useGroup().groupId;
   console.log("Current Group ID in Workspace:", group_id);
 

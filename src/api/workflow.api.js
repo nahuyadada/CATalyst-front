@@ -27,3 +27,16 @@ export async function GapAPI(id){
     },
   });
 }
+export async function TopicSuggesterAPI({group_id, gaps}){
+      return apiRequest(`/topic/run`, {
+    method: "POST",
+    body: JSON.stringify({ 
+      group_id,
+      gaps
+     }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+}
