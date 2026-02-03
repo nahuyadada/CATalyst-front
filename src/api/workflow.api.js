@@ -17,5 +17,13 @@ export async function summarizerAPI(id){
       "Content-Type": "application/json",
     },
   });
-  
+}
+export async function GapAPI(id){
+    return apiRequest(`/gap/${id}`, {
+    method: "POST",
+    body: JSON.stringify({ id }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 }

@@ -39,7 +39,6 @@ export default function SummarizerInput() {
       try {
         setLoading(true);
         const data = await getExtractedFilesByGroupAPI(group_id);
-        console.log("Extracted files data:", data);
         setExtractedFiles(data.data || []);
       } catch (error) {
         console.error("Error fetching extracted files:", error);

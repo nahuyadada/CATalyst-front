@@ -1,9 +1,23 @@
-import { useRef, useState } from "react";
-import { FaCloudUploadAlt, FaPlay } from "react-icons/fa";
+import { useEffect, useState, useRef } from "react";
+import { FaPlay,FaCloudUploadAlt } from "react-icons/fa";
+import { useGroup } from "../../../context/GroupContext.jsx";
+import { getSummaryByGroupAPI } from "../../../api/workflow.summarizer.js";
+import { GapAPI } from "../../../api/workflow.api.js";
 
 export default function GapInput() {
+  const group_id = useGroup().groupId;
+  console.log("group: ",group_id)
+  
   const [file, setFile] = useState(null);
   const fileInputRef = useRef(null);
+
+  const [summaries, setSummaries] = useState([]);
+  const [selectedSummaries, setSelectedSummaries] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [running, setRunning] = useState(false);
+
+
+  
 
   const handleFile = (files) => {
     const picked = files[0];
@@ -18,20 +32,69 @@ export default function GapInput() {
   const handleDragOver = (e) => e.preventDefault();
   const openFilePicker = () => fileInputRef.current.click();
   const handleFileChange = (e) => handleFile(e.target.files);
+  useEffect(() => {
+    async function fetchSummaries() {
+      try {
+        setLoading(true);
+        const res = await getSummaryByGroupAPI(group_id);
+        console.log("this is res: ",res)
+        setSummaries(res.data || []);
+      } catch (err) {
+        console.error("Failed to fetch summaries:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    if (group_id) fetchSummaries();
+  }, [group_id]);
+
+  const toggleSummary = (id) => {
+    setSelectedSummaries((prev) =>
+      prev.includes(id)
+        ? prev.filter((i) => i !== id)
+        : [...prev, id]
+    );
+  };
+
+  const handleRunWorkflow = async () => {
+    if (selectedSummaries.length === 0) {
+      alert("Select at least one summary.");
+      return;
+    }
+
+    try {
+      setRunning(true);
+
+      const res = await GapAPI({
+        group_id,
+        summary_ids: selectedSummaries,
+      });
+      console.log("res: ",res)
+
+      alert("Gap workflow started.");
+    } catch (err) {
+      console.error(err);
+      alert(err.message || "Failed to run workflow");
+    } finally {
+      setRunning(false);
+    }
+  };
 
   return (
     <div className="card h-full flex flex-col">
       <div className="card-header d-flex justify-content-between align-items-center">
         <div>
           <h5 className="fw-bold mb-0">Input</h5>
-          <small className="text-muted">Upload document and set instructions</small>
+          <small className="text-muted">Select summaries for gap analysis</small>
         </div>
         <span className="material-symbols-outlined">input</span>
       </div>
 
       <div className="card-body flex-1 flex flex-col gap-4 p-4">
-        {/* Upload Area */}
-        <div
+
+
+<div
           className="border-2 border-dashed border-primary rounded-xl p-6 text-center cursor-pointer hover:bg-primary/10 transition"
           onDrop={handleDrop}
           onDragOver={handleDragOver}
@@ -65,19 +128,62 @@ export default function GapInput() {
           </div>
         )}
 
-        {/* Instructions */}
-        <div className="flex flex-col flex-1">
-          <label className="fw-bold mb-1">Additional Instructions</label>
-          <textarea
-            className="form-control flex-1 resize-none"
-            placeholder="Specify keywords, target length, or specific questions..."
-          />
+
+
+
+
+        <div className="flex-grow-1 overflow-auto mb-3">
+          <label className="fw-bold mb-2 d-block">Available Summaries</label>
+
+          {loading && (
+            <div className="text-muted small">Loading summaries...</div>
+          )}
+
+          {!loading && summaries.length === 0 && (
+            <div className="text-muted small">
+              No summaries found for this group.
+            </div>
+          )}
+
+          {!loading &&
+            summaries.map((item) => (
+              <div
+                key={item.id}
+                className="form-check border rounded p-3 mb-2"
+                style={{ cursor: "pointer" }}
+              >
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  id={`sum-${item.id}`}
+                  checked={selectedSummaries.includes(item.id)}
+                  onChange={() => toggleSummary(item.id)}
+                />
+
+                <label
+                  className="form-check-label w-100 ms-2"
+                  htmlFor={`sum-${item.id}`}
+                  style={{ cursor: "pointer" }}
+                >
+                  <div className="fw-semibold small">
+                    {item.title || "Untitled Summary"}
+                  </div>
+                  <div className="text-muted" style={{ fontSize: "12px" }}>
+                    {item.filename}
+                  </div>
+                </label>
+              </div>
+            ))}
         </div>
 
-        {/* Run Button */}
         <div className="text-end">
-          <button className="btn btn-primary">
-            <FaPlay className="me-1" /> Run Workflow
+          <button
+            className="btn btn-primary"
+            onClick={handleRunWorkflow}
+            disabled={running}
+          >
+            <FaPlay className="me-1" />
+            {running ? "Running..." : "Run Workflow"}
           </button>
         </div>
       </div>
