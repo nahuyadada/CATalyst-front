@@ -4,8 +4,9 @@ import { MdInput } from "react-icons/md";
 import { extractorAPI } from "../../../api/workflow.api";
 
 import { useRef, useState} from "react";
+import { useGroup } from "../../../context/GroupContext.jsx";
 export default function InputPanel({setResult}) {
-
+  const group_id = useGroup().groupId;
   const [file, setFile] = useState(null);
   const fileInputRef = useRef(null);
 
@@ -41,7 +42,7 @@ export default function InputPanel({setResult}) {
     try {
       setLoading(true);
 
-      const response = await extractorAPI(file);
+      const response = await extractorAPI(file,group_id);
 
       if (response.success) {
         setResult(response.data);

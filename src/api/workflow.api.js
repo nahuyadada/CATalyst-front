@@ -1,8 +1,9 @@
 import { apiRequest } from "./http";
 
-export async function extractorAPI(file) {
+export async function extractorAPI(file,group_id) {
   const formData = new FormData();
   formData.append("file", file); // must match multer.single("file")
+  formData.append("group_id",group_id);
 
   return apiRequest("/extractor/file", {
     method: "POST",
