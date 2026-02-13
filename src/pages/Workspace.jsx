@@ -5,7 +5,7 @@ import WorkflowTracker from "../components/workspace/WorkflowTracker";
 import ResultPanel from "../components/workspace/ResultPanel";
 import { useGroup } from "../context/GroupContext";
 export default function GroupWorkflow() {
-  const [step, setStep] = useState("extractor"); // change to focus
+  const [step, setStep] = useState("summarizer"); // change to focus
 
   const [result,setResult] = useState(null);
 

@@ -10,10 +10,10 @@ export async function extractorAPI(file,group_id) {
     body: formData,
   });
 }
-export async function summarizerAPI(id){
+export async function summarizerAPI(id,group_id){
   return apiRequest(`/summarizer/${id}`, {
     method: "POST",
-    body: JSON.stringify({ id }),
+    body: JSON.stringify({ id,group_id }),
     headers: {
       "Content-Type": "application/json",
     },
