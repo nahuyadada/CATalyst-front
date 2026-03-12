@@ -10,6 +10,8 @@ import { useState, useEffect } from "react";
 import { createGroup as createGroupAPI, joinGroupAPI,getGroupsByUserIdAPI } from "../api/group.api";
 import { useAuth } from "../context/AuthContext";
 
+import { IoIosAddCircle } from "react-icons/io";
+import { FaLink } from "react-icons/fa";
 
 export default function Groups() {
   const id = useAuth().user.id;
@@ -120,7 +122,7 @@ export default function Groups() {
             <ActionCard
               title="Create Group"
               subtitle="Start a new research workspace"
-              icon="add_circle"
+              icon= {<IoIosAddCircle size={24} />}
               color="#7a1e1e"
               onClick={() => openModal("createGroupModal")}
             />
@@ -131,7 +133,7 @@ export default function Groups() {
             <ActionCard
               title="Join Group"
               subtitle="Enter using a group code"
-              icon="group_add"
+              icon={<FaLink size={24} />}
               color="#d4af37"
               onClick={() => openModal("joinGroupModal")}
 

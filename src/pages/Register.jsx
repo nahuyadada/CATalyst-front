@@ -1,35 +1,124 @@
 import PublicLayout from "../layouts/PublicLayout";
+import { useState } from "react";
+import { register as registerAPI } from "../api/auth.api";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
+import { FaCheckCircle } from "react-icons/fa";
+import { GrSecure } from "react-icons/gr";
 export default function Login() {
-    console.log("Rendering Regisgeter Page");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    const data = await registerAPI({ email, password });
+    login(data.user, data.token);
+    navigate("/groups");
+  }
+
   return (
     <PublicLayout>
-      <div className="row justify-content-center">
-        <div className="col-md-5">
-          <div className="card">
-            <div className="card-body">
-              <h3 className="mb-4 text-center">Register</h3>
+      <div className="container-fluid min-vh-100">
+        <div className="row flex-grow-1" style={{ minHeight: "100vh" }}>
 
-              <form>
-                <div className="mb-3">
-                  <label className="form-label">Email</label>
-                  <input type="email" className="form-control" />
+          {/* LEFT SIDE (Marketing Panel) */}
+          <div className="col-lg-6 d-none d-lg-flex align-items-center bg-white border-end overflow-auto">
+            <div className="p-5">
+
+              <div className="mb-4 text-primary">
+                <span className="material-symbols-outlined" style={{ fontSize: "36px" }}>
+                  CATalyst
+                </span>
+              </div>
+
+              <h1 className="fw-bold mb-4">
+                Join CATalyst and start discovering research gaps
+              </h1>
+
+              <p className="text-muted mb-5">
+                Register now to access AI-powered tools that help you analyze literature, identify research gaps, 
+                and generate actionable thesis topics faster than ever.
+              </p>
+
+              <div className="row g-4">
+                <div className="col-md-6 d-flex">
+                  <span className="material-symbols-outlined text-primary me-3">
+                    {<FaCheckCircle size={24} />}
+                  </span>
+                  <div>
+                    <strong>Instant Insights</strong>
+                    <div className="text-muted small">
+                      Get AI-powered gap analysis immediately.
+                    </div>
+                  </div>
                 </div>
 
-                <div className="mb-3">
-                  <label className="form-label">Password</label>
-                  <input type="password" className="form-control" />
+                <div className="col-md-6 d-flex">
+                  <span className="material-symbols-outlined text-primary me-3">
+                    {<GrSecure size={24} />}
+                  </span>
+                  <div>
+                    <strong>Secure Workspace</strong>
+                    <div className="text-muted small">
+                      Your research and notes remain private.
+                    </div>
+                  </div>
                 </div>
-                <div>
-                    <a href="/login">Already have an account? Login</a>
-                </div>
+              </div>
 
-                <button className="btn btn-primary w-100">
-                  Register
-                </button>
-              </form>
             </div>
           </div>
+
+          {/* RIGHT SIDE (REGISTER FORM) */}
+          <div className="col-lg-6 d-flex align-items-center justify-content-center bg-light">
+            <div className="card shadow-sm border-0" style={{ maxWidth: "420px", width: "100%" }}>
+              <div className="card-body p-4">
+
+                <h3 className="fw-bold mb-2">Create Account</h3>
+                <p className="text-muted mb-4">
+                  Sign up to start using CATalyst
+                </p>
+
+                <form onSubmit={handleSubmit}>
+
+                  <div className="mb-3">
+                    <label className="form-label">Email Address</label>
+                    <input
+                      type="email"
+                      className="form-control"
+                      placeholder="john@example.com"
+                      onChange={e => setEmail(e.target.value)}
+                    />
+                  </div>
+
+                  <div className="mb-4">
+                    <label className="form-label">Password</label>
+                    <input
+                      type="password"
+                      className="form-control"
+                      placeholder="••••••••"
+                      onChange={e => setPassword(e.target.value)}
+                    />
+                  </div>
+
+                  <button className="btn btn-primary w-100 mb-3">
+                    Register
+                  </button>
+
+                  <p className="text-center small">
+                    Already have an account?{" "}
+                    <a href="/login">Login</a>
+                  </p>
+
+                </form>
+
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </PublicLayout>
