@@ -1,74 +1,8 @@
-// import { useAuth } from "../context/AuthContext";
-// import { useNavigate } from "react-router-dom";
-// import { useEffect, useRef } from "react";
-// import { Dropdown } from "bootstrap";
-
-
-// export default function Navbar() {
-//   const { user, isAuthenticated, logout } = useAuth();
-//   const navigate = useNavigate();
-//   const dropdownRef = useRef(null);
-
-//   useEffect(() => {
-//     if (dropdownRef.current) {
-//       new Dropdown(dropdownRef.current);
-//     }
-//   }, []);
-
-
-//   function handleLogout() {
-//     logout();
-//     navigate("/login");
-//   }
-
-//   return (
-//     <nav className="navbar navbar-dark bg-dark sticky-top">
-//       <div className="container-fluid">
-//         {/* <a className="navbar-brand" href="/">
-//           CATalyst
-//         </a> */}
-        
-//         {isAuthenticated && user && (
-//           <div className="dropdown ms-auto">
-//             <button
-//               // ref={dropdownRef}
-//               className="btn btn-dark dropdown-toggle"
-//               type="button"
-//               data-bs-toggle="dropdown"
-//               aria-expanded="false"
-//               onClick={() => console.log("User menu")}
-//             >
-//               {user.username || user.email}
-//             </button>
-
-//             <ul className="dropdown-menu dropdown-menu-end">
-//               <li>
-//                 <button
-//                   className="dropdown-item"
-//                   onClick={() => navigate("/settings")}
-//                 >
-//                   Settings
-//                 </button>
-//               </li>
-//               <li><hr className="dropdown-divider" /></li>
-//               <li>
-//                 <button
-//                   className="dropdown-item text-danger"
-//                   onClick={handleLogout}
-//                 >
-//                   Logout
-//                 </button>
-//               </li>
-//             </ul>
-//           </div>
-//         )}
-//       </div>
-//     </nav>
-//   );
-// }
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import CatLogo from "../assets/Untitled.png";
+import "../App.css";
 
 export default function Navbar() {
   const { user, isAuthenticated, logout } = useAuth();
@@ -83,8 +17,16 @@ export default function Navbar() {
   return (
     <nav className="navbar navbar-dark bg-dark sticky-top">
       <div className="container-fluid">
-        <a className="navbar-brand" href="/" >
+        {/* <a className="navbar-brand" href="/" >
           CATalyst
+        </a> */}
+        <a className="navbar-brand" href="/">
+          <img
+            src={CatLogo}
+            alt="CATalyst Logo"
+            className="navbar-logo"
+          />
+          <span className="brand-text">CATalyst</span>
         </a>
 
         {isAuthenticated && user && (

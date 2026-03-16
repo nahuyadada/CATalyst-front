@@ -1,15 +1,27 @@
 #root {
-  max-width: 1280px;
+  /* max-width:; */
   margin: 0 auto;
-  padding: 2rem;
+  /* padding: 2rem; */
   text-align: center;
 }
 
-.logo {
+/* .logo {
   height: 6em;
   padding: 1.5em;
   will-change: filter;
   transition: filter 300ms;
+} */
+.navbar-logo {
+  height: 90px;
+  width: auto;
+  /* filter: brightness(1.2) drop-shadow(0 0 4px rgba(0, 170, 255, 0.4)); */
+}
+
+.brand-text {
+  font-size: 1.4rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: #e6f4ff;
 }
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
