@@ -9,12 +9,12 @@ const steps = [
   { key: "summarizer", label: "Summarizer", icon: HiOutlineDocumentSearch },
   { key: "gap", label: "Gap Extractor", icon: IoExtensionPuzzle },
   { key: "topic", label: "Topic Suggester", icon: PiHeadCircuitBold },
-  { key: "search", label: "Searcher", icon: IoGlobeOutline },
+  // { key: "search", label: "Searcher", icon: IoGlobeOutline },
 ];
 
 export default function WorkflowTracker({ currentStep, onStepChange }) {
   return (
-    <div className="card p-4 mb-4">
+    <div className="card p-4 mb-4" style={{ backgroundColor: "#1e1e2f", border: "1px solid #3a3a55" }}>
       <div className="d-flex justify-content-between align-items-center flex-wrap">
 
         {steps.map((step, index) => {
@@ -29,25 +29,28 @@ export default function WorkflowTracker({ currentStep, onStepChange }) {
                 onClick={() => onStepChange(step.key)}
               >
                 <div
-                  className={`rounded-circle d-flex align-items-center justify-content-center mb-2
-                    ${isActive ? "bg-primary text-white" : "bg-light text-muted border"}
-                  `}
-                  style={{ width: 48, height: 48 }}
+                  className={`rounded-circle d-flex align-items-center justify-content-center mb-2`}
+                  style={{
+                    width: 48,
+                    height: 48,
+                    backgroundColor: isActive ? "#5b5bd6" : "#25253a",
+                    color: isActive ? "#fff" : "#a1a1b5",
+                    border: isActive ? "none" : "1px solid #3a3a55",
+                  }}
                 >
                   <Icon size={22} />
                 </div>
 
                 <div
-                  className={`fw-bold small ${
-                    isActive ? "text-primary" : "text-muted"
-                  }`}
+                  className={`fw-bold small`}
+                  style={{ color: isActive ? "#5b5bd6" : "#a1a1b5" }}
                 >
                   {step.label}
                 </div>
               </div>
 
               {index !== steps.length - 1 && (
-                <MdDoubleArrow size={22} className="mx-3 text-muted" />
+                <MdDoubleArrow size={22} className="mx-3" style={{ color: "#a1a1b5" }} />
               )}
             </div>
           );

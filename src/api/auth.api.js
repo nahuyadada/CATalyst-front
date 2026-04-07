@@ -8,7 +8,7 @@ export function login(credentials) {
 }
 
 export function register(payload) {
-  return apiRequest("/auth/register", {
+  return apiRequest("/auth/signup", {
     method: "POST",
     body: JSON.stringify(payload),
   });

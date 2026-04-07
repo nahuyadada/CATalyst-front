@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
-import { IoPlay, IoDocumentText } from "react-icons/io5";
+import { FaPlay } from "react-icons/fa";
+import { MdInput } from "react-icons/md";
+
 import { useGroup } from "../../../context/GroupContext.jsx";
 import { getGapsByGroupAPI } from "../../../api/workflow.gap.js";
 import { TopicSuggesterAPI } from "../../../api/workflow.api.js";
-export default function TopicSuggesterInput() {
+
+export default function TopicSuggesterInput({ setResult }) {
   const { groupId: group_id } = useGroup();
 
   const [gaps, setGaps] = useState([]);
@@ -35,141 +38,120 @@ export default function TopicSuggesterInput() {
     );
   };
 
-  // const handleRunWorkflow = async () => {
-  //   if (selectedGaps.length === 0) {
-  //     alert("Select at least one gap.");
-  //     return;
-  //   }
-
-  //   try {
-  //     setRunning(true);
-
-  //     const res = await TopicSuggesterAPI({
-  //       group_id,
-  //       gap_ids: selectedGaps,
-  //     });
-
-  //     alert("Topic suggestion workflow started.");
-  //   } catch (err) {
-  //     console.error(err);
-  //     alert(err.message || "Failed to run workflow");
-  //   } finally {
-  //     setRunning(false);
-  //   }
-  // };
-
   const handleRunWorkflow = async () => {
-  if (selectedGaps.length === 0) {
-    alert("Select at least one gap.");
-    return;
-  }
+    if (selectedGaps.length === 0) {
+      alert("Select at least one gap.");
+      return;
+    }
 
-  try {
-    setRunning(true);
+    try {
+      setRunning(true);
 
-    // Map selected IDs to their corresponding gap texts
-    const selectedGapTexts = gaps
-      .filter((g) => selectedGaps.includes(g.id))
-      .map((g) => g.gap);
+      const selectedGapTexts = gaps
+        .filter((g) => selectedGaps.includes(g.id))
+        .map((g) => g.gap);
 
-    const res = await TopicSuggesterAPI({
-      group_id,
-      gaps: selectedGapTexts, // send texts instead of IDs
-    });
+      const response = await TopicSuggesterAPI({
+        group_id,
+        gaps: selectedGapTexts,
+      });
 
-    alert("Topic suggestion workflow started.");
-  } catch (err) {
-    console.error(err);
-    alert(err.message || "Failed to run workflow");
-  } finally {
-    setRunning(false);
-  }
-};
-
+      setResult(response.data);
+      alert("Topic suggestion workflow started.");
+    } catch (err) {
+      console.error(err);
+      alert(err.message || "Failed to run workflow");
+    } finally {
+      setRunning(false);
+    }
+  };
 
   return (
-    <div className="card shadow-sm h-100">
-      {/* Header */}
-      <div className="card-header d-flex justify-content-between align-items-center">
-        <h5 className="mb-0 fw-bold">Input</h5>
-        <IoDocumentText size={20} className="text-muted" />
+    <div
+      className="h-100 rounded-4 p-3"
+      style={{
+        backgroundColor: "#1e1e2f",
+        border: "1px solid #3a3a55",
+        color: "#e4e4f0",
+      }}
+    >
+      <div className="d-flex justify-content-between mb-3">
+        <div>
+          <h5 className="fw-bold mb-0 text-white">Input</h5>
+          <small style={{ color: "#a1a1b5" }}>
+            Select gaps for topic suggestion
+          </small>
+        </div>
+        <MdInput size={22} />
       </div>
 
-      {/* Body */}
-      <div className="card-body d-flex flex-column">
+      <div className="d-flex flex-column gap-4">
+        <div>
+          <small style={{ color: "#a1a1b5" }}>Available Gaps</small>
 
-        {/* Gap Selection (Scrollable) */}
-        <div
-          className="flex-grow-1 overflow-auto mb-3"
-          style={{ maxHeight: "350px" }}
-        >
-          <label className="fw-bold mb-2 d-block">Available Gaps</label>
+          <div
+            className="mt-2 d-flex flex-column gap-2"
+            style={{ maxHeight: "200px", overflowY: "auto" }}
+          >
+            {loading && (
+              <div style={{ color: "#a1a1b5" }}>Loading gaps...</div>
+            )}
 
-          {loading && (
-            <div className="text-muted small">Loading gaps...</div>
-          )}
-
-          {!loading && gaps.length === 0 && (
-            <div className="text-muted small">
-              No gaps found for this group.
-            </div>
-          )}
-
-          {!loading &&
-            gaps.map((gap) => (
-              <div
-                key={gap.id}
-                className="form-check border rounded p-3 mb-2"
-                style={{ cursor: "pointer" }}
-              >
-                <input
-                  className="form-check-input"
-                  type="checkbox"
-                  id={`gap-${gap.id}`}
-                  checked={selectedGaps.includes(gap.id)}
-                  onChange={() => toggleGap(gap.id)}
-                />
-
-                <label
-                  className="form-check-label w-100 ms-2"
-                  htmlFor={`gap-${gap.id}`}
-                  style={{ cursor: "pointer" }}
-                >
-                  <div className="fw-semibold small">{gap.title}</div>
-                  <div className="text-muted" style={{ fontSize: "12px" }}>
-                    {gap.gap}
-                  </div>
-                </label>
+            {!loading && gaps.length === 0 && (
+              <div style={{ color: "#a1a1b5" }}>
+                No gaps found for this group.
               </div>
-            ))}
+            )}
+
+            {!loading &&
+              gaps.map((gap) => (
+                <div
+                  key={gap.id}
+                  className="p-2 rounded-3 d-flex align-items-start gap-2"
+                  style={{
+                    backgroundColor: "#25253a",
+                    border: "1px solid #3a3a55",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => toggleGap(gap.id)}
+                >
+                  <input
+                    type="checkbox"
+                    checked={selectedGaps.includes(gap.id)}
+                    readOnly
+                    style={{ marginTop: "4px" }}
+                  />
+                  <div>
+                    <div className="small text-white fw-semibold">
+                      {gap.title || "Untitled Gap"}
+                    </div>
+                    <div
+                      style={{ fontSize: "12px", color: "#a1a1b5" }}
+                    >
+                      {gap.gap}
+                    </div>
+                  </div>
+                </div>
+              ))}
+          </div>
         </div>
 
-        {/* Extra Gap Input (kept for future use) */}
-        {/*
-        <div className="mb-3">
-          <label className="form-label fw-bold">Additional Gaps</label>
-          <textarea
-            className="form-control"
-            rows="3"
-            placeholder="Add extra gaps here..."
-            value={extraInput}
-            onChange={(e) => setExtraInput(e.target.value)}
-          />
-        </div>
-        */}
-
-        {/* Run Button */}
         <div className="text-end">
           <button
-            className="btn btn-primary px-4"
             onClick={handleRunWorkflow}
             disabled={running}
+            className="btn"
+            style={{
+              backgroundColor: "#5b5bd6",
+              color: "#fff",
+              border: "none",
+            }}
           >
-            <IoPlay className="me-2" />
+            <FaPlay className="me-1" />
             {running ? "Running..." : "Run Workflow"}
           </button>
         </div>
       </div>
     </div>
   );
-}
+} 

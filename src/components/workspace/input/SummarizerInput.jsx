@@ -1,30 +1,55 @@
 import { useRef, useState, useEffect } from "react";
 import { FaCloudUploadAlt, FaPlay } from "react-icons/fa";
+import { MdInput } from "react-icons/md";
+
 import { useGroup } from "../../../context/GroupContext.jsx";
 import { getExtractedFilesByGroupAPI } from "../../../api/workflow.extractor.js";
 import { summarizerAPI } from "../../../api/workflow.api.js";
-export default function SummarizerInput() {
+
+export default function SummarizerInput({ setResult }) {
+  const group_id = useGroup().groupId;
+
   const [file, setFile] = useState(null);
   const fileInputRef = useRef(null);
-  
-  const group_id = useGroup().groupId;
 
   const [extractedFiles, setExtractedFiles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [running, setRunning] = useState(false);
+  const [selectedInstruction, setSelectedInstruction] = useState(null); // single selection
+
+  function handleFile(selectedFiles) {
+    const picked = selectedFiles[0];
+    if (picked) setFile(picked);
+  }
+
+  function handleDrop(e) {
+    e.preventDefault();
+    handleFile(e.dataTransfer.files);
+  }
+
+  function openFilePicker() {
+    fileInputRef.current.click();
+  }
+
+  const toggleInstruction = (id) => {
+    // Only allow one selection
+    setSelectedInstruction((prev) => (prev === id ? null : id));
+  };
 
   const handleRunWorkflow = async () => {
-    if (selectedInstructions.length === 0) {
-      alert("Please select at least one extracted file.");
+    if (!selectedInstruction) {
+      alert("Please select one extracted file.");
       return;
     }
 
     try {
       setRunning(true);
-      const res = await summarizerAPI(selectedInstructions[0],group_id);
+      const response = await summarizerAPI(selectedInstruction, group_id);
+
+      setResult(response.data);
       alert("Summarizer workflow started successfully.");
     } catch (err) {
-      console.error("Failed to run summarizer:", err);
+      console.error(err);
       alert(err.message || "Failed to run workflow");
     } finally {
       setRunning(false);
@@ -37,146 +62,129 @@ export default function SummarizerInput() {
         setLoading(true);
         const data = await getExtractedFilesByGroupAPI(group_id);
         setExtractedFiles(data.data || []);
-      } catch (error) {
-        console.error("Error fetching extracted files:", error);
+      } catch (err) {
+        console.error(err);
       } finally {
         setLoading(false);
       }
     }
 
-    if (group_id) {
-      fetchExtractedFiles();
-    }
+    if (group_id) fetchExtractedFiles();
   }, [group_id]);
-  const [selectedInstructions, setSelectedInstructions] = useState([]);
-
-
-  const toggleInstruction = (id) => {
-    setSelectedInstructions((prev) =>
-      prev.includes(id)
-        ? prev.filter((i) => i !== id)
-        : [...prev, id]
-    );
-  };
-
-
-  const handleFile = (files) => {
-    const picked = files[0];
-    if (picked) setFile(picked);
-  };
-
-  const handleDrop = (e) => {
-    e.preventDefault();
-    handleFile(e.dataTransfer.files);
-  };
-
-  const handleDragOver = (e) => e.preventDefault();
-  const openFilePicker = () => fileInputRef.current.click();
-  const handleFileChange = (e) => handleFile(e.target.files);
 
   return (
-    <div className="card h-full flex flex-col">
-      <div className="card-header d-flex justify-content-between align-items-center">
+    <div
+      className="h-100 rounded-4 p-3"
+      style={{
+        backgroundColor: "#1e1e2f",
+        border: "1px solid #3a3a55",
+        color: "#e4e4f0"
+      }}
+    >
+      {/* HEADER */}
+      <div className="d-flex justify-content-between mb-3">
         <div>
-          <h5 className="fw-bold mb-0">Input</h5>
-          <small className="text-muted">Upload document and set instructions</small>
+          <h5 className="fw-bold mb-0 text-white">Input</h5>
+          <small style={{ color: "#a1a1b5" }}>
+            Upload document and select one extracted text
+          </small>
         </div>
-        <span className="material-symbols-outlined">input</span>
+        <MdInput size={22} />
       </div>
 
-      <div className="card-body flex-1 flex flex-col gap-4 p-4">
-        {/* Upload Area */}
-        <div
-          className="border-2 border-dashed border-primary rounded-xl p-6 text-center cursor-pointer hover:bg-primary/10 transition"
-          onDrop={handleDrop}
-          onDragOver={handleDragOver}
-          onClick={openFilePicker}
-        >
-          <FaCloudUploadAlt size={28} className="text-primary mb-3" />
-          <h6 className="fw-bold">Ready to process?</h6>
-          <p className="text-muted text-sm">Drop files (PDF, DOCX, TXT) or click to browse.</p>
+      {/* BODY */}
+      <div className="d-flex flex-column gap-4">
 
+        {/* UPLOAD AREA */}
+        {/* <div
+          onDrop={handleDrop}
+          onDragOver={(e) => e.preventDefault()}
+          onClick={openFilePicker}
+          className="rounded-4 text-center p-4"
+          style={{
+            border: "2px dashed #5b5bd6",
+            cursor: "pointer",
+            backgroundColor: "#25253a"
+          }}
+        > */}
+          {/* <FaCloudUploadAlt size={28} color="#a5b4fc" />
+          <h6 className="fw-bold mt-3 text-white">Ready to summarize?</h6>
+          <p style={{ color: "#a1a1b5" }}>Drop files or click to browse</p>
           <button
-            className="btn btn-primary mt-3"
-            type="button"
+            className="btn mt-2"
+            style={{ backgroundColor: "#5b5bd6", color: "#fff", border: "none" }}
             onClick={(e) => { e.stopPropagation(); openFilePicker(); }}
           >
             Upload File
           </button>
-          <input ref={fileInputRef} type="file" hidden onChange={handleFileChange} />
-        </div>
+          <input ref={fileInputRef} type="file" hidden onChange={(e) => handleFile(e.target.files)} />
+        </div> */}
 
-        {file && (
-          <div className="mt-2">
-            <small className="text-muted">File ready:</small>
-            <div className="list-group mt-2">
-              <div className="list-group-item py-1 d-flex justify-content-between align-items-center">
-                {file.name}
-                <button className="btn btn-sm btn-outline-danger" onClick={() => setFile(null)}>
-                  Remove
-                </button>
-              </div>
+        {/* {file && (
+          <div>
+            <small style={{ color: "#a1a1b5" }}>File ready:</small>
+            <div
+              className="mt-2 p-2 rounded-3 d-flex justify-content-between align-items-center"
+              style={{ backgroundColor: "#25253a", border: "1px solid #3a3a55" }}
+            >
+              <span className="small text-white">{file.name}</span>
+              <button
+                className="btn btn-sm"
+                style={{ border: "1px solid #ff6b6b", color: "#ff6b6b", background: "transparent" }}
+                onClick={() => setFile(null)}
+              >
+                Remove
+              </button>
             </div>
           </div>
-        )}
-      <div className="flex-grow-1 overflow-auto mb-3">
-  <label className="fw-bold mb-2 d-block">Extracted Texts</label>
+        )} */}
 
-  {loading && (
-    <div className="text-muted small">Loading instructions...</div>
-  )}
-
-  {!loading && extractedFiles.length === 0 && (
-    <div className="text-muted small">
-      No instructions configured for this group.
-    </div>
-  )}
-
-  {!loading &&
-    extractedFiles.map((item) => (
-      <div
-        key={item.id}
-        className="form-check border rounded p-3 mb-2"
-        style={{ cursor: "pointer" }}
-      >
-        <input
-          className="form-check-input"
-          type="checkbox"
-          id={`inst-${item.id}`}
-          checked={selectedInstructions.includes(item.id)}
-          onChange={() => toggleInstruction(item.id)}
-        />
-
-        <label
-          className="form-check-label w-100 ms-2"
-          htmlFor={`inst-${item.id}`}
-          style={{ cursor: "pointer" }}
-        >
-          <div className="fw-semibold small">{item.title}</div>
-          <div className="text-muted" style={{ fontSize: "12px" }}>
-            {item.description}
+        {/* EXTRACTED FILES */}
+        <div>
+          <small style={{ color: "#a1a1b5" }}>Extracted Texts</small>
+          <div className="mt-2 d-flex flex-column gap-2" style={{ maxHeight: "200px", overflowY: "auto" }}>
+            {loading && <div style={{ color: "#a1a1b5" }}>Loading...</div>}
+            {!loading && extractedFiles.length === 0 && (
+              <div style={{ color: "#a1a1b5" }}>No extracted files found.</div>
+            )}
+            {!loading &&
+              extractedFiles.map((item) => (
+                <div
+                  key={item.id}
+                  className="p-2 rounded-3 d-flex align-items-start gap-2"
+                  style={{
+                    backgroundColor: "#25253a",
+                    border: "1px solid #3a3a55",
+                    cursor: "pointer"
+                  }}
+                  onClick={() => toggleInstruction(item.id)}
+                >
+                  <input
+                    type="radio"
+                    checked={selectedInstruction === item.id}
+                    readOnly
+                    style={{ marginTop: "4px" }}
+                  />
+                  <div>
+                    <div className="small text-white fw-semibold">{item.title}</div>
+                    <div style={{ fontSize: "12px", color: "#a1a1b5" }}>{item.description}</div>
+                  </div>
+                </div>
+              ))}
           </div>
-        </label>
-      </div>
-    ))}
-</div>
+        </div>
 
-        {/* Run Button */}
+        {/* RUN BUTTON */}
         <div className="text-end">
-          {/* <button className="btn btn-primary">
-            <FaPlay className="me-1" /> Run Workflow
-          </button> */}
-            <button
-              className="btn btn-primary"
-              onClick={handleRunWorkflow}
-              disabled={running}
-              
-            >
-              <FaPlay className="me-1" />
+          <button
+            onClick={handleRunWorkflow}
+            disabled={running}
+            className="btn"
+            style={{ backgroundColor: "#5b5bd6", color: "#fff", border: "none" }}
+          >
+            <FaPlay className="me-1" />
             {running ? "Running..." : "Run Workflow"}
-
-            </button> 
-
+          </button>
         </div>
       </div>
     </div>

@@ -15,18 +15,18 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="navbar navbar-dark bg-dark sticky-top">
+    <nav className="navbar navbar-dark  sticky-top" style={{backgroundColor: "#2a2f36"}}>
       <div className="container-fluid">
         {/* <a className="navbar-brand" href="/" >
           CATalyst
         </a> */}
         <a className="navbar-brand" href="/">
-          <img
+          {/* <img
             src={CatLogo}
             alt="CATalyst Logo"
             className="navbar-logo"
-          />
-          <span className="brand-text">CATalyst</span>
+          /> */}
+          <span className="brand-text" style={{color: "#c9a44c" }}>CATalyst</span>
         </a>
 
         {isAuthenticated && user && (
@@ -34,6 +34,11 @@ export default function Navbar() {
             <button
               className="btn btn-dark dropdown-toggle"
               type="button"
+              style={{
+                backgroundColor: "#2a2f36",
+                color: "#d4af37",
+                border: "1px solid #2a2f36"
+              }}
               onClick={() => setOpen(prev => !prev)}
             >
               {user.username || user.email}
@@ -42,11 +47,14 @@ export default function Navbar() {
             {open && (
               <ul
                 className="dropdown-menu dropdown-menu-end show"
-                style={{ display: "block", position: "absolute", right: 0 }}
+                style={{ display: "block", position: "absolute", right: 0,backgroundColor: "#2a2f36" }}
               >
                 <li>
                   <button
                     className="dropdown-item"
+                    style={{
+                      color: "#d4af37",
+                    }}
                     onClick={() => {
                       navigate("/settings");
                       setOpen(false);

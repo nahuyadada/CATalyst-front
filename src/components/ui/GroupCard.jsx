@@ -1,98 +1,93 @@
-// import { useNavigate } from "react-router-dom";
-
-// export default function GroupCard({ name, members, status = "Active",color,group_id }) {
-//   const navigate = useNavigate();
-//   function handleEnter() {
-//     // const safeName = name.replace(/\s+/g, "-"); // spaces → dash
-//     const safeName = group_id;
-//     navigate(`/workspace/${safeName}`);
-//   }
-//   return (
-//     <div className="card border-0 rounded-4 shadow-sm overflow-hidden h-100">
-      
-//       {/* Header */}
-//       <div
-//         className="position-relative"
-//         style={{
-//           height: 120,
-//           background: `linear-gradient(135deg, ${color}, ${color}cc)`,
-
-//         }}
-//       >
-//         <span
-//           className="badge bg-light text-dark position-absolute top-0 end-0 m-3 px-3 py-2"
-//           style={{ fontSize: 10 }}
-//         >
-//           <span className="text-success me-1">●</span>
-//           {status}
-//         </span>
-//       </div>
-
-//       {/* Body */}
-//       <div className="card-body">
-//         <h5 className="fw-bold">{name}</h5>
-
-//         <div className="d-flex align-items-center text-muted small mb-3">
-//           <span className="material-symbols-outlined me-1 fs-6">
-//             group
-//           </span>
-//           {members} Members
-//         </div>
-
-//         <button 
-//           onClick={handleEnter}
-//           className="btn btn-outline-primary w-100 fw-bold">
-//           Enter Group
-//         </button>
-//       </div>
-//     </div>
-//   );
-// }
 import { useNavigate } from "react-router-dom";
 import { useGroup } from "../../context/GroupContext.jsx";
+import { useState } from "react";
 
-export default function GroupCard({ name, members, status = "Active", color, group_id }) {
+export default function GroupCard({ name, group_id, color, description }) {
   const navigate = useNavigate();
   const { enterGroup } = useGroup();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   function handleEnter() {
-    // save group info globally
     enterGroup({ id: group_id, name, color });
-    
-
-    // navigate to workspace
     navigate(`/workspace/${group_id}`);
   }
 
+  const headerGradient = `linear-gradient(135deg, ${color}cc, ${color}99)`;
+
   return (
-    <div className="card border-0 rounded-4 shadow-sm overflow-hidden h-100">
+    <div
+      className="card border-0 rounded-4 shadow-sm overflow-hidden h-100"
+      style={{ backgroundColor: "#1e1e2f" }}
+    >
       {/* Header */}
       <div
         className="position-relative"
         style={{
           height: 120,
-          background: `linear-gradient(135deg, ${color}, ${color}cc)`,
+          background: headerGradient,
         }}
       >
-        <span
-          className="badge bg-light text-dark position-absolute top-0 end-0 m-3 px-3 py-2"
-          style={{ fontSize: 10 }}
-        >
-          <span className="text-success me-1">●</span>
-          {status}
-        </span>
+        {/* Settings Dropdown */}
+        <div className="position-absolute top-0 end-0 m-3">
+          <button
+            className="btn btn-sm text-light"
+            onClick={() => setDropdownOpen(!dropdownOpen)}
+          >
+            <span className="material-symbols-outlined">settings</span>
+          </button>
+          {dropdownOpen && (
+            <div
+              className="position-absolute end-0 mt-2 p-2 rounded-3"
+              style={{
+                backgroundColor: "#2a2a3d",
+                border: "1px solid #3a3a55",
+                zIndex: 10,
+                minWidth: 120,
+              }}
+            >
+              <div
+                className="d-flex align-items-center p-1 hover-bg"
+                style={{ cursor: "pointer", color: "#ffffff" }}
+              >
+                <span className="material-symbols-outlined me-2 fs-6">edit</span>
+                Edit
+              </div>
+              <div
+                className="d-flex align-items-center p-1 hover-bg mt-1"
+                style={{ cursor: "pointer", color: "#ffffff" }}
+              >
+                <span className="material-symbols-outlined me-2 fs-6">delete</span>
+                Delete
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Body */}
-      <div className="card-body">
+      <div className="card-body d-flex flex-column" style={{ color: "#e4e4f0" }}>
         <h5 className="fw-bold">{name}</h5>
-        <div className="d-flex align-items-center text-muted small mb-3">
-          <span className="material-symbols-outlined me-1 fs-6">group</span>
-          {members} Members
+
+        <div
+          className="mb-3"
+          style={{
+            color: "#a1a1b5",
+            maxHeight: 60,
+            overflowY: "auto",
+            whiteSpace: "pre-wrap",
+          }}
+        >
+          {description || "No description"}
         </div>
+
         <button
           onClick={handleEnter}
-          className="btn btn-outline-primary w-100 fw-bold"
+          className="btn w-100 fw-bold mt-auto"
+          style={{
+            backgroundColor: "transparent",
+            border: "1px solid #5b5bd6",
+            color: "#a5b4fc",
+          }}
         >
           Enter Group
         </button>

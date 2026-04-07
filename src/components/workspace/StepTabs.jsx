@@ -4,7 +4,7 @@ export default function StepTabs({ current, onChange }) {
     { key: "summarizer", label: "Summarizer" },
     { key: "gap", label: "Gap Extractor" },
     { key: "topic", label: "Topic Suggester" },
-    { key: "search", label: "Searcher" },
+    // { key: "search", label: "Searcher" },
   ];
 
   return (

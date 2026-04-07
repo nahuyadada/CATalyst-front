@@ -7,7 +7,6 @@ export default function JoinGroupModal({ onSubmit }) {
   function handleSubmit(e) {
     e.preventDefault();
     onSubmit({ joinCode });
-    // console.log({ joinCode});
   }
 
   return (

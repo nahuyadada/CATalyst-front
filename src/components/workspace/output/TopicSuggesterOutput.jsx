@@ -1,104 +1,7 @@
-// import { useState, useEffect } from "react";
-
-// export default function TopicSuggesterOutput({ topics = [] }) {
-//   const [activeTopicId, setActiveTopicId] = useState(null);
-
-//   const demoTopics = [
-//     {
-//       id: 1,
-//       title: "Infrastructure Resilience Initiative",
-//       brief: "Mitigating latency and scalability bottlenecks.",
-//       summary: "This topic focuses on improving system stability during peak load.",
-//       points: [
-//         "Introduce caching layer",
-//         "Improve websocket handling",
-//         "Add circuit breakers",
-//       ],
-//     },
-//     {
-//       id: 2,
-//       title: "Legacy Data Modernization",
-//       brief: "Updating validation logic for core modules.",
-//       summary: "Modernizing legacy validation for better data integrity.",
-//       points: [
-//         "Refactor validation module",
-//         "Add schema checks",
-//         "Improve logging",
-//       ],
-//     },
-//   ];
-
-//   const safeTopics = topics.length > 0 ? topics : demoTopics;
-
-//   useEffect(() => {
-//     if (safeTopics.length > 0 && !activeTopicId) {
-//       setActiveTopicId(safeTopics[0].id);
-//     }
-//   }, [safeTopics, activeTopicId]);
-
-//   const activeTopic = safeTopics.find((t) => t.id === activeTopicId);
-
-//   return (
-//     <div className="card shadow-sm" style={{ height: "500px" }}>
-//       <div className="row g-0 h-100">
-        
-//         {/* Left Column */}
-//         <div className="col-4 border-end d-flex flex-column bg-light">
-//           <div className="p-3 border-bottom">
-//             <p className="small fw-bold text-uppercase text-muted mb-0">
-//               Available Topics ({safeTopics.length})
-//             </p>
-//           </div>
-
-//           <div className="flex-grow-1 overflow-auto">
-//             {safeTopics.map((topic) => (
-//               <div
-//                 key={topic.id}
-//                 onClick={() => setActiveTopicId(topic.id)}
-//                 className={`p-3 border-bottom cursor-pointer ${
-//                   activeTopicId === topic.id ? "bg-primary bg-opacity-10" : ""
-//                 }`}
-//                 style={{ cursor: "pointer" }}
-//               >
-//                 <h6 className="fw-bold mb-1">{topic.title}</h6>
-//                 <p className="small text-muted mb-0 text-truncate">
-//                   {topic.brief}
-//                 </p>
-//               </div>
-//             ))}
-//           </div>
-//         </div>
-
-//         {/* Right Column */}
-//         <div className="col-8 p-4 overflow-auto">
-//           {activeTopic ? (
-//             <>
-//               <h3 className="fw-bold mb-3">{activeTopic.title}</h3>
-
-//               <p className="text-muted">{activeTopic.summary}</p>
-
-//               <ul className="mt-3">
-//                 {activeTopic.points.map((pt, idx) => (
-//                   <li key={idx} className="mb-2">
-//                     {pt}
-//                   </li>
-//                 ))}
-//               </ul>
-//             </>
-//           ) : (
-//             <p className="text-muted">Select a topic to see details</p>
-//           )}
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
 import { useEffect, useState } from "react";
 import { useGroup } from "../../../context/GroupContext";
-import { getGapsByGroupAPI } from "../../../api/workflow.gap";
-import { RiLoader4Line, RiQuestionLine } from "react-icons/ri";
 import { getTopicsByGroupIdAPI } from "../../../api/workflow.topic";
+import { RiLoader4Line, RiQuestionLine } from "react-icons/ri";
 
 export default function TopicSuggesterOutput({ result }) {
   const group_id = useGroup().groupId;
@@ -108,58 +11,72 @@ export default function TopicSuggesterOutput({ result }) {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    async function fetchGaps() {
+    async function fetchTopics() {
       if (!group_id) return;
 
       setLoading(true);
       try {
         const res = await getTopicsByGroupIdAPI(group_id);
         const data = res.data || [];
-        console.log("res: ",res.data);
-
         setItems(data);
 
-        // Auto focus newly generated OR first
         if (result?.id) {
           setActiveId(result.id);
         } else if (data.length > 0) {
           setActiveId(data[0].id);
         }
       } catch (err) {
-        console.error("Error fetching gaps:", err);
+        console.error("Error fetching topics:", err);
       } finally {
         setLoading(false);
       }
     }
 
-    fetchGaps();
+    fetchTopics();
   }, [group_id, result]);
 
   const activeItem = items.find((p) => p.id === activeId);
 
   return (
-    <div className="card shadow-sm" style={{ height: "500px" }}>
-      <div className="row g-0 h-100">
-
-        {/* LEFT SIDEBAR — TITLES */}
-        <div className="col-4 border-end d-flex flex-column bg-light">
-          <div className="p-3 border-bottom">
-            <p className="small fw-bold text-uppercase text-muted mb-0">
+    <div
+      className="h-100 d-flex flex-column rounded-4 p-3"
+      style={{
+        backgroundColor: "#1e1e2f",
+        border: "1px solid #3a3a55",
+        color: "#e4e4f0",
+        minHeight: 0,
+      }}
+    >
+      <div className="d-flex gap-3 h-100" style={{ minHeight: 0 }}>
+        <div
+          className="d-flex flex-column"
+          style={{
+            width: "200px",
+            maxWidth: "35%",
+            borderRight: "1px solid #3a3a55",
+            minHeight: 0,
+          }}
+        >
+          <div className="mb-2">
+            <p
+              className="small fw-bold text-uppercase mb-0"
+              style={{ color: "#a1a1b5" }}
+            >
               Suggested Topics ({items.length})
             </p>
           </div>
 
-          <div className="flex-grow-1 overflow-auto">
+          <div className="flex-grow-1" style={{ overflowY: "auto", minHeight: 0 }}>
             {loading ? (
-              <div className="text-center p-4">
-                <RiLoader4Line className="fs-1 text-primary animate-spin mb-2" />
-                <p className="text-muted small">Loading topics...</p>
+              <div className="text-center mt-5">
+                <RiLoader4Line className="fs-1 mb-2" />
+                <p style={{ color: "#a1a1b5" }}>Loading topics...</p>
               </div>
             ) : items.length === 0 ? (
-              <div className="text-center p-4">
-                <RiQuestionLine className="fs-1 text-secondary mb-2" />
-                <p className="text-muted small">
-                  No gaps extracted yet. Run the gap extractor.
+              <div className="text-center mt-5">
+                <RiQuestionLine className="fs-1 mb-2" />
+                <p style={{ color: "#a1a1b5" }}>
+                  No topics generated yet.
                 </p>
               </div>
             ) : (
@@ -167,33 +84,56 @@ export default function TopicSuggesterOutput({ result }) {
                 <div
                   key={item.id}
                   onClick={() => setActiveId(item.id)}
-                  className={`p-3 border-bottom ${
-                    activeId === item.id ? "bg-primary bg-opacity-10" : ""
-                  }`}
-                  style={{ cursor: "pointer" }}
+                  className="p-3 mb-2 rounded-3"
+                  style={{
+                    cursor: "pointer",
+                    backgroundColor: activeId === item.id ? "#5b5bd6" : "#25253a",
+                    border: "1px solid #3a3a55",
+                    overflow: "hidden",
+                  }}
                 >
-                  <h6 className="fw-bold mb-1">{item.title}</h6>
-                  <p className="small text-muted mb-0 text-truncate">
-                    {item.gap}
-                  </p>
+                  <h6
+                    className="fw-bold mb-0 text-truncate"
+                    style={{ color: "#fff" }}
+                    title={item.title}
+                  >
+                    {item.title}
+                  </h6>
                 </div>
               ))
             )}
           </div>
         </div>
 
-        {/* RIGHT PANEL — GAP */}
-        <div className="col-8 p-4 overflow-auto">
+        <div
+          className="flex-grow-1 d-flex flex-column"
+          style={{
+            paddingLeft: "1rem",
+            minHeight: 0,
+            maxWidth: "calc(100% - 200px)",
+            overflowY: "auto",
+          }}
+        >
           {activeItem ? (
             <>
-              <h4 className="fw-bold mb-3">{activeItem.title}</h4>
-
-              <div className="border rounded p-4 bg-white shadow-sm">
+              <h4 className="fw-bold mb-3" style={{ color: "#fff" }}>
+                {activeItem.title}
+              </h4>
+              <div
+                className="p-4 rounded-3"
+                style={{
+                  backgroundColor: "#25253a",
+                  border: "1px solid #3a3a55",
+                  color: "#a1a1b5",
+                }}
+              >
                 <p className="mb-0">{activeItem.rationale}</p>
               </div>
             </>
           ) : (
-            <p className="text-muted">Select a source to view extracted gap.</p>
+            <p style={{ color: "#a1a1b5" }}>
+              Select a topic to view details.
+            </p>
           )}
         </div>
       </div>
