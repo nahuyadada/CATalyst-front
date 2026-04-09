@@ -3,6 +3,7 @@ import ActionCard from "../components/ui/ActionCard";
 import GroupCard from "../components/ui/GroupCard";
 import CreateGroupModal from "../components/modals/CreateGroupModal";
 import JoinGroupModal from "../components/modals/JoinGroupModal";
+import EditWorkspaceModal from "../components/modals/EditGroupModal";
 import FeedbackModal from "../components/modals/FeedbackModal";
 import { useFeedbackModal } from "../hooks/useFeedbackModel";
 import { Modal } from "bootstrap";
@@ -23,6 +24,7 @@ export default function Groups() {
 
   const [groups, setGroups] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedGroup, setSelectedGroup] = useState(null);
 
   const { config, showFeedback } = useFeedbackModal();
 
@@ -96,6 +98,15 @@ export default function Groups() {
     }
   }
 
+  function handleEditWorkspace(data) {
+    console.log("EDIT WORKSPACE DATA:", data);
+  }
+
+  const openEditModal = (group) => {
+    setSelectedGroup(group);
+    openModal("editWorkspaceModal");
+  };
+
   useEffect(() => {
     async function fetchGroups() {
       try {
@@ -115,38 +126,9 @@ export default function Groups() {
     <GroupsLayout>
       <div className="py-4">
 
-        {/* Action Buttons */}
-        {/* <div className="row g-4 mb-5"> */}
-
-          {/* Join Group (COMMENTED OUT BUT PRESERVED) */}
-          {/*
-          <div className="col-md-6">
-            <ActionCard
-              title="Join Group"
-              subtitle="Enter using a group code"
-              icon={<FaLink size={24} />}
-              color="#334155"
-              onClick={() => openModal("joinGroupModal")}
-            />
-          </div>
-          */}
-
-          {/* Create Group */}
-          {/* <div className="col-md-6">
-            <ActionCard
-              title="Create Group"
-              subtitle="Start a new research workspace"
-              icon={<IoIosAddCircle size={24} />}
-              color="#1e293b"
-              onClick={() => openModal("createGroupModal")}
-            />
-          </div> */}
-
-        {/* </div> */}
-
         {/* Groups List */}
         <h5 className="fw-bold mb-3" style={{ color: "#ffffff" }}>
-          GROUPS
+          WORKSPACES
         </h5>
 
         <div className="row g-4">
@@ -165,6 +147,7 @@ export default function Groups() {
                   color={group.color}
                   group_id={group.id}
                   description={group.description}
+                  onEdit={() => openEditModal(group)}
                 />
               </div>
             ))
@@ -172,19 +155,20 @@ export default function Groups() {
         </div>
 
         {/* Floating Action Button */}
-        <div
-          className="fab"
-          onClick={() => openModal("createGroupModal")}
-        >
+        <div className="fab" onClick={() => openModal("createGroupModal")}>
           <IoIosAddCircle size={28} />
-          <span className="fab-tooltip">
-            Start new workspace
-          </span>
+          <span className="fab-tooltip">Start new workspace</span>
         </div>
 
         {/* Modals */}
         <CreateGroupModal onSubmit={handleCreateGroup} />
         <JoinGroupModal onSubmit={handleJoinGroup} />
+
+        <EditWorkspaceModal
+          data={selectedGroup}
+          onSubmit={handleEditWorkspace}
+        />
+
         <FeedbackModal {...config} />
 
       </div>

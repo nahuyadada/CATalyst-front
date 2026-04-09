@@ -1,8 +1,19 @@
+import { CiSettings } from "react-icons/ci";
+import { MdDelete } from "react-icons/md";
+import { FaPen } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useGroup } from "../../context/GroupContext.jsx";
 import { useState } from "react";
+import { Modal } from "bootstrap";
+import ConfirmModal from "../modals/ConfirmModal";
 
-export default function GroupCard({ name, group_id, color, description }) {
+export default function GroupCard({
+  name,
+  group_id,
+  color,
+  description,
+  onEdit,
+}) {
   const navigate = useNavigate();
   const { enterGroup } = useGroup();
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -11,6 +22,15 @@ export default function GroupCard({ name, group_id, color, description }) {
     enterGroup({ id: group_id, name, color });
     navigate(`/workspace/${group_id}`);
   }
+
+  function openDeleteModal() {
+    const modal = new Modal(document.getElementById(`delete-${group_id}`));
+    modal.show();
+  }
+
+  const handleDelete = () => {
+    console.log("DELETE CONFIRMED FOR:", group_id);
+  };
 
   const headerGradient = `linear-gradient(135deg, ${color}cc, ${color}99)`;
 
@@ -33,8 +53,9 @@ export default function GroupCard({ name, group_id, color, description }) {
             className="btn btn-sm text-light"
             onClick={() => setDropdownOpen(!dropdownOpen)}
           >
-            <span className="material-symbols-outlined">settings</span>
+            <CiSettings />
           </button>
+
           {dropdownOpen && (
             <div
               className="position-absolute end-0 mt-2 p-2 rounded-3"
@@ -45,18 +66,29 @@ export default function GroupCard({ name, group_id, color, description }) {
                 minWidth: 120,
               }}
             >
+              {/* EDIT */}
               <div
                 className="d-flex align-items-center p-1 hover-bg"
                 style={{ cursor: "pointer", color: "#ffffff" }}
+                onClick={() => {
+                  setDropdownOpen(false);
+                  onEdit?.();
+                }}
               >
-                <span className="material-symbols-outlined me-2 fs-6">edit</span>
+                <FaPen className="me-2" />
                 Edit
               </div>
+
+              {/* DELETE */}
               <div
                 className="d-flex align-items-center p-1 hover-bg mt-1"
                 style={{ cursor: "pointer", color: "#ffffff" }}
+                onClick={() => {
+                  setDropdownOpen(false);
+                  openDeleteModal();
+                }}
               >
-                <span className="material-symbols-outlined me-2 fs-6">delete</span>
+                <MdDelete className="me-2" />
                 Delete
               </div>
             </div>
@@ -92,6 +124,16 @@ export default function GroupCard({ name, group_id, color, description }) {
           Enter Group
         </button>
       </div>
+
+      {/* Confirm Modal */}
+      <ConfirmModal
+        id={`delete-${group_id}`}
+        title="Delete Group"
+        message="Are you sure you want to delete this group? This action cannot be undone."
+        type="danger"
+        confirmText="Delete"
+        onConfirm={handleDelete}
+      />
     </div>
   );
 }
