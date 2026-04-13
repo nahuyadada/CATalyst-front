@@ -8,6 +8,7 @@ import FeedbackModal from "../components/modals/FeedbackModal";
 import { useFeedbackModal } from "../hooks/useFeedbackModel";
 import { Modal } from "bootstrap";
 import { useState, useEffect } from "react";
+import { updateGroupAPI, deleteGroupAPI } from "../api/group.api";
 import "../styles/groups.css";
 import {
   createGroup as createGroupAPI,
@@ -48,6 +49,7 @@ export default function Groups() {
         name: newGroup.data.name,
         members: newGroup.data.members ?? 1,
         color: newGroup.data.color,
+        is_active : true
       };
 
       setGroups((prev) => [normalized, ...prev]);
@@ -97,9 +99,64 @@ export default function Groups() {
       });
     }
   }
+  async function handleDeleteGroup(id) {
+    try {
+      await deleteGroupAPI(id);
 
-  function handleEditWorkspace(data) {
-    console.log("EDIT WORKSPACE DATA:", data);
+      setGroups((prev) =>
+        prev.filter((g) => g.id !== id)
+      );
+
+      showFeedback({
+        type: "success",
+        title: "Deleted",
+        message: "Workspace removed.",
+      });
+    } catch (err) {
+      showFeedback({
+        type: "error",
+        title: "Delete Failed",
+        message: err.message,
+      });
+    }
+  }
+  async function handleEditWorkspace(data) {
+    try {
+      const payload = {
+        ...data,
+        id: selectedGroup.id,
+      };
+
+      const res = await updateGroupAPI(payload.id, payload);
+      const updatedGroup = {
+        ...selectedGroup,
+        ...res.data,
+      };
+
+      setGroups((prev) =>
+        prev.map((g) =>
+          g.id === payload.id ? updatedGroup : g
+        )
+      );
+
+      // ✅ CLOSE MODAL
+      const modalEl = document.getElementById("editWorkspaceModal");
+      const modal = Modal.getInstance(modalEl);
+      modal?.hide();
+
+      showFeedback({
+        type: "success",
+        title: "Updated",
+        message: "Workspace updated successfully.",
+      });
+
+    } catch (err) {
+      showFeedback({
+        type: "error",
+        title: "Update Failed",
+        message: err.message,
+      });
+    }
   }
 
   const openEditModal = (group) => {
@@ -139,7 +196,8 @@ export default function Groups() {
               You are not part of any groups yet.
             </p>
           ) : (
-            groups.map((group) => (
+            groups.filter((group) => group.is_active == true).
+            map((group) => (
               <div className="col-md-4" key={group.id}>
                 <GroupCard
                   name={group.name}
@@ -148,6 +206,7 @@ export default function Groups() {
                   group_id={group.id}
                   description={group.description}
                   onEdit={() => openEditModal(group)}
+                  onDelete={handleDeleteGroup}
                 />
               </div>
             ))

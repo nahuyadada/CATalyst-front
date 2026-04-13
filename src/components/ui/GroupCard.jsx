@@ -13,6 +13,7 @@ export default function GroupCard({
   color,
   description,
   onEdit,
+  onDelete,
 }) {
   const navigate = useNavigate();
   const { enterGroup } = useGroup();
@@ -29,7 +30,7 @@ export default function GroupCard({
   }
 
   const handleDelete = () => {
-    console.log("DELETE CONFIRMED FOR:", group_id);
+    onDelete?.(group_id);
   };
 
   const headerGradient = `linear-gradient(135deg, ${color}cc, ${color}99)`;

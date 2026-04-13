@@ -17,3 +17,16 @@ export async function getGroupsByUserIdAPI(userId) {
     method: "GET",
   });
 }
+
+export async function updateGroupAPI(id, data) {
+  return apiRequest(`/groups/update/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
+}
+
+export async function deleteGroupAPI(id) {
+  return apiRequest(`/groups/delete/${id}`, {
+    method: "DELETE",
+  });
+}
