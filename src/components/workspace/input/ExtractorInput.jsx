@@ -18,7 +18,19 @@ export default function InputPanel({ setResult }) {
 
   function handleFile(selectedFiles) {
     const picked = selectedFiles[0];
-    if (picked) setFile(picked);
+
+    if (!picked) return;
+
+    if (picked.type !== "application/pdf") {
+      showFeedback({
+        type: "error",
+        title: "Invalid File Type",
+        message: "Only PDF files are allowed.",
+      });
+      return;
+    }
+
+    setFile(picked);
   }
 
   function handleDrop(e) {
@@ -138,6 +150,7 @@ export default function InputPanel({ setResult }) {
               ref={fileInputRef}
               type="file"
               hidden
+              accept="application/pdf"
               onChange={(e) => handleFile(e.target.files)}
             />
           </div>
