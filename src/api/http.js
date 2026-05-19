@@ -1,6 +1,10 @@
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL;
 
 export async function apiRequest(endpoint, options = {}) {
+  if (!API_URL) {
+    throw new Error("Missing API base URL. Set VITE_API_URL or VITE_API_BASE_URL.");
+  }
+
   const token = localStorage.getItem("token");
 
   const headers = {
@@ -19,7 +23,7 @@ export async function apiRequest(endpoint, options = {}) {
   const data = await res.json();
 
   if (!res.ok) {
-    throw new Error(data.message || "Request failed");
+    throw new Error(data.error || data.message || "Request failed");
   }
 
   return data;
